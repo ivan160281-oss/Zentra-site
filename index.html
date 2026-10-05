@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zentra — разработка программного обеспечения</title>
+<meta name="description" content="Центра (Zentra) — компания-разработчик программного обеспечения. Современные подходы к разработке: скорость и точность на каждом этапе.">
+<meta property="og:title" content="Zentra — разработка программного обеспечения">
+<meta property="og:description" content="Компания, построенная на новых правилах разработки. Скорость и точность на каждом этапе.">
+<meta property="og:url" content="https://zentra.su/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#04060C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%2304060C%22/%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%2366E3FF%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M7%2020%20V11%20a4%204%200%200%201%204-4%20H20%22/%3E%3Cpath%20d%3D%22M44%207%20H53%20a4%204%200%200%201%204%204%20V20%22/%3E%3Cpath%20d%3D%22M57%2044%20V53%20a4%204%200%200%201-4%204%20H44%22/%3E%3Cpath%20d%3D%22M20%2057%20H11%20a4%204%200%200%201-4-4%20V44%22/%3E%3Cpath%20d%3D%22M20%2020%20H44%20L20%2044%20H44%22%20stroke-width%3D%228%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&family=Unbounded:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #04060C;
+    --deep: #080C18;
+    --panel: rgba(17, 24, 44, .55);
+    --line: rgba(140, 170, 255, .14);
+    --line-strong: rgba(140, 170, 255, .28);
+    --text: #E9EEF8;
+    --muted: #8C97AD;
+    --cyan: #66E3FF;
+    --violet: #8F7BFF;
+    --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+    --body: "Onest", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    color-scheme: dark;
+    box-sizing: border-box;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(80px + env(safe-area-inset-top, 0px)); }
+  body {
+    margin: 0; background: var(--void); color: var(--text);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; font-weight: 400;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: rgba(102, 227, 255, .3); }
+  :root { --drawer-w: min(980px, 62vw); }
+  .wrap { width: min(1240px, 100% - 3rem); margin-inline: auto; position: relative; }
+  body { transition: padding-right .9s cubic-bezier(.2,.75,.15,1); }
+  @media (min-width: 901px) { body.si-open { padding-right: var(--drawer-w); } body.si-open .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Background grid */
+  .grid-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(140,170,255,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(140,170,255,.045) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 100%);
+  }
+  main, footer { position: relative; z-index: 1; }
+
+  /* Nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 20;
+    padding-top: env(safe-area-inset-top, 0px);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    background: rgba(4, 6, 12, .6); border-bottom: 1px solid transparent;
+    transition: border-color .3s;
+  }
+  .infobar { position: relative; z-index: 21; background: var(--void); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .infobar::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(102,227,255,.5), rgba(143,123,255,.5), transparent); }
+  .info-in { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2.5rem; align-items: center; padding: 1.3rem 0 1.4rem; }
+  .info-logo { display: inline-flex; align-items: center; gap: .85rem; font-family: var(--display); font-weight: 700; font-size: 1.5rem; letter-spacing: .02em; text-decoration: none; color: #E9EEF8; line-height: 1; }
+  .info-logo svg { width: 64px; height: 64px; flex-shrink: 0; filter: drop-shadow(0 0 14px rgba(102,227,255,.4)) drop-shadow(0 6px 10px rgba(0,0,0,.6)); }
+  .info-lines { text-align: center; }
+  @media (max-width: 1180px) and (min-width: 761px) { .info-in { grid-template-columns: auto 1fr auto; } .info-lines p { font-size: .86rem; } }
+  .info-lines p { margin: 0 0 .35rem; color: var(--muted); font-size: .95rem; }
+  .info-lines p:last-child { margin-bottom: 0; }
+  .info-contacts { justify-self: end; display: grid; grid-template-columns: auto auto 28px; align-items: center; column-gap: .75rem; row-gap: .45rem; }
+  .ct { display: contents; }
+  .nb { white-space: nowrap; }
+  .info-lines .nb { display: block; }
+  .req-main { color: var(--text) !important; }
+  .req-main span { color: var(--muted); margin-left: .6rem; }
+  .ct-label { font-family: var(--mono); font-size: .72rem; color: var(--muted); text-align: right; }
+  .ct-val { font-family: var(--body); font-weight: 500; font-size: 1.1rem; color: var(--cyan); letter-spacing: .01em; text-shadow: 0 0 16px rgba(102,227,255,.45); user-select: all; -webkit-user-select: all; cursor: text; white-space: nowrap; }
+  .ct-copy { width: 28px; height: 28px; display: grid; place-items: center; padding: 0; border-radius: 8px; border: 1px solid var(--line-strong); background: transparent; color: var(--muted); cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+  .ct-copy:hover { color: var(--cyan); border-color: rgba(102,227,255,.5); }
+  .ct-copy.done { color: #04060C; background: var(--cyan); border-color: var(--cyan); }
+  .ct-copy svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  header.nav .logo { max-width: 0; overflow: hidden; opacity: 0; margin-right: 0; transition: max-width .45s, opacity .3s, margin .45s; flex-shrink: 0; }
+  header.nav.stuck .logo { max-width: 200px; opacity: 1; margin-right: 1rem; pointer-events: auto; }
+  header.nav:not(.stuck) .logo { pointer-events: none; }
+  @media (max-width: 760px) {
+    .info-logo svg { width: 44px; height: 44px; }
+    .info-logo { font-size: 1.2rem; }
+    .info-in { grid-template-columns: 1fr; justify-items: center; gap: .8rem; padding: 1rem 0 1.1rem; }
+    .info-contacts { justify-self: center; }
+    .info-lines .nb { display: inline; white-space: normal; }
+    .info-lines p { font-size: .86rem; }
+    .ct-val { font-size: 1rem; }
+  }
+  header.nav.scrolled { border-bottom-color: var(--line); }
+  .nav-in { display: flex; align-items: center; height: 78px; }
+  .logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: .02em; }
+  .logo svg { width: 34px; height: 34px; filter: drop-shadow(0 0 6px rgba(102,227,255,.35)); }
+  nav.menu { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+  nav.menu a { position: relative; display: flex; align-items: center; justify-content: center; gap: .65rem; height: 50px; border-radius: 10px; border: 1px solid rgba(140,170,255,.26); background: linear-gradient(180deg, #16213A 0%, #0B1222 55%, #080D1A 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -3px 0 rgba(0,0,0,.5), 0 6px 16px -8px rgba(0,0,0,.9); font-family: var(--display); font-weight: 500; font-size: 1.02rem; letter-spacing: .05em; color: #C9D3E6; text-decoration: none; transition: color .2s, border-color .2s, box-shadow .2s, transform .08s; }
+  nav.menu a::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #2A3550; box-shadow: inset 0 1px 1px rgba(0,0,0,.6); transition: background .2s, box-shadow .2s; }
+  nav.menu a::after { content: ""; position: absolute; left: 12px; right: 12px; top: 1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); }
+  nav.menu a.on { color: #fff; border-color: rgba(102,227,255,.5); }
+  nav.menu a.on::before { background: #7EE2B0; box-shadow: 0 0 8px #7EE2B0; }
+  nav.menu a:hover { color: #fff; border-color: rgba(102,227,255,.75); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), inset 0 -3px 0 rgba(0,0,0,.5), 0 0 22px -6px rgba(102,227,255,.6); }
+  nav.menu a:hover::before { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+  nav.menu a:active { transform: translateY(2px); box-shadow: inset 0 3px 8px rgba(0,0,0,.7); }
+
+
+
+  /* Hero */
+  .hero { position: relative; display: flex; align-items: center; padding: clamp(3rem, 6vh, 4.5rem) 0 clamp(3.5rem, 8vh, 6rem); overflow: hidden; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: clamp(2rem, 4vw, 3.5rem); align-items: center; position: relative; z-index: 2; }
+  .hero h1 { font-size: clamp(2.2rem, 4.4vw, 4rem); }
+  .focus { display: flex; flex-wrap: wrap; gap: .5rem; margin: -1rem 0 2.5rem; }
+  .focus span { font-family: var(--mono); font-size: .78rem; color: var(--text); padding: .35rem .75rem; border: 1px solid var(--line-strong); border-radius: 6px; background: rgba(17,24,44,.5); }
+  #beam { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+  .cam-rig { position: absolute; top: 0; right: max(1.5rem, calc((100% - 1240px) / 2)); width: 64px; z-index: 2; opacity: .34; pointer-events: none; }
+  .cam { width: 100%; height: auto; display: block; overflow: visible; }
+  .cam .r-solid { fill: #0E1629; stroke: rgba(102,227,255,.55); stroke-width: 1.2; }
+  .cam .r-body { stroke: rgba(102,227,255,.6); stroke-width: 1.2; }
+  .cam .r-shield { fill: #121C33; stroke: rgba(102,227,255,.4); stroke-width: 1; }
+  .cam .r-bolt circle { fill: #04060C; stroke: rgba(102,227,255,.5); stroke-width: 1; }
+  .cam .r-line { fill: none; stroke: rgba(140,170,255,.35); stroke-width: 1; }
+  .cam .r-ghost { fill: none; stroke: rgba(102,227,255,.45); stroke-width: .7; stroke-dasharray: 2 1.6; }
+  .cam .r-gear { fill: none; stroke: rgba(102,227,255,.85); stroke-width: .75; stroke-linejoin: round; }
+  .cam .r-cable { fill: none; stroke: rgba(140,170,255,.4); stroke-width: 1.6; stroke-linecap: round; }
+  .cam .r-label { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--muted); }
+  #camLed { animation: led 1.6s steps(1) infinite; }
+  @keyframes led { 50% { opacity: .25; } }
+
+
+  .console { width: 100%; max-width: 540px; font-family: var(--mono); font-size: .72rem; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 14px; overflow: hidden; background: linear-gradient(180deg, rgba(17,24,44,.92), rgba(7,11,22,.95)); box-shadow: 0 40px 120px -40px rgba(102,227,255,.35), inset 0 1px 0 rgba(255,255,255,.05); }
+  .con-head { display: flex; align-items: center; gap: .9rem; padding: .6rem .9rem; border-bottom: 1px solid var(--line); }
+  .live { display: inline-flex; align-items: center; gap: .4rem; color: #FF6B78; font-weight: 500; letter-spacing: .08em; }
+  .live i { width: 7px; height: 7px; border-radius: 50%; background: #FF4D5E; box-shadow: 0 0 8px #FF4D5E; animation: led 1.6s steps(1) infinite; }
+  .con-title { color: var(--text); }
+  .con-id { margin-left: auto; color: var(--cyan); }
+  .vp { position: relative; aspect-ratio: 16 / 7.6; border-bottom: 1px solid var(--line); background: #03050A; }
+  .vp canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .telemetry { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+  .telemetry div { padding: .45rem .9rem; border-right: 1px solid var(--line); border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: .15rem; }
+  .telemetry div:nth-child(-n+3) { border-top: 0; }
+  .telemetry div:nth-child(3n) { border-right: 0; }
+  .telemetry span { font-size: .66rem; letter-spacing: .04em; }
+  .telemetry b { color: var(--text); font-weight: 500; font-size: .92rem; font-variant-numeric: tabular-nums; }
+  .log { list-style: none; margin: 0; padding: .5rem .9rem; height: 6.85rem; overflow: hidden; border-bottom: 1px solid var(--line); line-height: 1.45rem; }
+  .log li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log li.new { animation: logIn .35s ease-out; }
+  .log li.alert .src, .log li.alert .msg { color: #FF7A86; }
+  .log li.good .src, .log li.good .msg { color: #7EE2B0; }
+  .log li.id .src { color: #B9AEFF; }
+  .log li.alt .src, .log li.alt .msg { color: #B9AEFF; }
+  .log .src { color: var(--cyan); }
+  .log .msg { color: var(--text); }
+  @keyframes logIn { from { opacity: 0; transform: translateY(-6px); } }
+  .con-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem 1rem; padding: .55rem .9rem; }
+  .con-foot b { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .flow { display: flex; align-items: center; gap: .6rem; min-width: 0; white-space: nowrap; }
+  .flow canvas { width: 110px; height: 22px; display: block; }
+  .dev { display: flex; gap: .6rem; white-space: nowrap; }
+  .hero::after {
+    content: ""; position: absolute; width: 900px; height: 900px; right: -15%; top: 50%; transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(143,123,255,.18), rgba(102,227,255,.06) 40%, transparent 65%);
+    z-index: -1; pointer-events: none;
+  }
+  .hero-copy { position: relative; z-index: 2; max-width: 760px; }
+  .hero-tag { display: inline-flex; max-width: 100%; align-items: center; gap: .6rem; font-family: var(--mono); font-size: .82rem; color: var(--cyan); padding: .4rem .9rem; border: 1px solid rgba(102,227,255,.3); border-radius: 999px; background: rgba(102,227,255,.06); margin-bottom: 2rem; }
+  .hero-tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+  h1 {
+    font-family: var(--display); font-weight: 700; margin: 0 0 1.75rem;
+    font-size: clamp(2.4rem, 6.2vw, 5.4rem); line-height: 1.02; letter-spacing: -.035em;
+    background: linear-gradient(180deg, #FFFFFF 20%, #9FB0D0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lead { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--muted); max-width: 40ch; margin: 0 0 2.75rem; font-weight: 300; }
+  .lead strong { color: var(--text); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn { position: relative; display: inline-flex; align-items: center; gap: .6rem; padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; font-weight: 500; transition: transform .2s, box-shadow .3s, border-color .2s; }
+  .btn.primary { background: linear-gradient(135deg, var(--cyan), var(--violet)); color: #04060C; box-shadow: 0 0 0 0 rgba(102,227,255,.0); }
+  .btn.primary:hover { box-shadow: 0 10px 40px -8px rgba(102,227,255,.55); transform: translateY(-1px); }
+  .btn.ghost { border: 1px solid var(--line-strong); }
+  .btn.ghost:hover { border-color: var(--text); }
+  .scroll-hint { position: absolute; bottom: 32px; left: 0; font-family: var(--mono); font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: .8rem; z-index: 2; }
+  .scroll-hint span { width: 44px; height: 1px; background: linear-gradient(90deg, var(--cyan), transparent); }
+
+  /* Reveal on load */
+  .rise { opacity: 0; transform: translateY(18px); }
+  .loaded .rise { opacity: 1; transform: none; transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+  .loaded .rise.d1 { transition-delay: .1s; } .loaded .rise.d2 { transition-delay: .22s; } .loaded .rise.d3 { transition-delay: .34s; }
+
+  /* Sections */
+  section { padding: clamp(5rem, 11vw, 9rem) 0; position: relative; }
+  .kicker { font-family: var(--mono); font-size: .85rem; color: var(--cyan); margin: 0 0 1.25rem; }
+  h2 { font-family: var(--display); font-weight: 500; font-size: clamp(1.9rem, 4vw, 3.3rem); line-height: 1.08; letter-spacing: -.03em; margin: 0 0 1.5rem; max-width: 20ch; }
+  .sub { color: var(--muted); max-width: 56ch; font-size: 1.12rem; margin: 0; font-weight: 300; }
+
+  /* Manifesto */
+  /* ===== appeal ===== */
+  .appeal { border-top: 1px solid var(--line); }
+  .appeal-card { position: relative; border: 1px solid var(--line-strong); border-radius: 22px; padding: clamp(1.8rem, 5vw, 4.2rem); background: radial-gradient(120% 90% at 0% 0%, rgba(102,227,255,.07), transparent 55%), radial-gradient(90% 80% at 100% 100%, rgba(143,123,255,.08), transparent 60%), rgba(255,255,255,.012); overflow: hidden; }
+  .appeal-card::before { content: ""; position: absolute; left: 0; top: 12%; bottom: 12%; width: 2px; background: linear-gradient(180deg, transparent, var(--cyan), var(--violet), transparent); }
+  .appeal h2 { max-width: 22ch; }
+  .appeal h2 .grad { background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .appeal-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); margin-top: 2.2rem; align-items: start; }
+  .appeal-text p { color: var(--muted); margin: 0 0 1.2rem; max-width: 60ch; font-size: 1.06rem; }
+  .appeal-text p strong { color: var(--text); font-weight: 500; }
+  .appeal-text p.lead2 { color: var(--text); font-size: 1.16rem; }
+  .bg-title { font-family: var(--mono); font-size: .78rem; color: var(--muted); margin: 0 0 .9rem; letter-spacing: .02em; }
+  .bg-list { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; gap: .55rem; }
+  .bg-list li { position: relative; padding: .7rem .9rem .7rem 2.1rem; border: 1px solid var(--line); border-radius: 12px; font-size: .97rem; background: rgba(4,6,12,.4); }
+  .bg-list li::before { content: ""; position: absolute; left: .9rem; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .formula { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem .9rem; padding: 1.2rem 1.3rem; border: 1px dashed rgba(102,227,255,.35); border-radius: 14px; font-family: var(--display); font-size: clamp(1rem, 1.6vw, 1.2rem); }
+  .formula .op { font-family: var(--mono); color: var(--cyan); font-size: 1.3em; }
+  .formula .x100 { font-weight: 600; background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.5em; line-height: 1; }
+  .formula small { display: block; width: 100%; font-family: var(--body); color: var(--muted); font-size: .85rem; }
+  .appeal-cta { margin-top: 2.6rem; padding-top: 2rem; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.4rem; }
+  .appeal-cta p { flex: 1 1 320px; margin: 0; color: var(--text); font-size: 1.08rem; max-width: 52ch; }
+  .appeal-cta .btns { display: flex; flex-wrap: wrap; gap: .8rem; }
+  .appeal-sign { margin-top: 1.4rem; font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  @media (max-width: 900px) { .appeal-grid { grid-template-columns: 1fr; } .appeal-cta .btns, .appeal-cta .btn { width: 100%; justify-content: center; } }
+  .manifesto { border-top: 1px solid var(--line); }
+  .manifesto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .manifesto p.big { font-family: var(--display); font-weight: 300; font-size: clamp(1.35rem, 2.4vw, 2rem); line-height: 1.35; letter-spacing: -.015em; margin: 0; color: var(--text); }
+  .manifesto p.big em { font-style: normal; color: var(--muted); }
+  .manifesto .body p { color: var(--muted); margin: 0 0 1.25rem; max-width: 52ch; }
+
+  /* Approach panels */
+  .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 4rem; background: var(--line); border: 1px solid var(--line); border-radius: 24px; overflow: hidden; }
+  .panel { position: relative; background: var(--void); padding: 2.25rem 2rem 2.5rem; min-height: 260px; overflow: hidden; }
+  .panel::before {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .4s;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(102,227,255,.12), transparent 45%);
+  }
+  .panel:hover::before { opacity: 1; }
+  .panel svg { width: 40px; height: 40px; margin-bottom: 2.5rem; stroke: var(--cyan); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .panel h3 { font-family: var(--display); font-weight: 500; font-size: 1.15rem; letter-spacing: -.01em; margin: 0 0 .7rem; position: relative; }
+  .panel p { margin: 0; color: var(--muted); font-size: .98rem; position: relative; }
+
+  /* Speed & precision */
+  .speed { border-top: 1px solid var(--line); }
+  .speed-grid { display: block; }
+  .speed .pairs { grid-template-columns: repeat(3, 1fr); gap: 1.5rem 2.5rem; }
+  .speed .pair { grid-template-columns: 1fr; gap: .5rem; }
+  @media (max-width: 900px) { .speed .pairs { grid-template-columns: 1fr; } }
+  .hero .terminal .term-body { min-height: 360px; }
+  .pairs { margin-top: 2.5rem; display: grid; gap: 1.5rem; }
+  .pair { display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .pair b { font-family: var(--display); font-weight: 500; font-size: 1rem; background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .pair span { color: var(--muted); }
+
+  .terminal { background: linear-gradient(180deg, rgba(17,24,44,.9), rgba(8,12,24,.9)); border: 1px solid var(--line-strong); border-radius: 18px; box-shadow: 0 40px 120px -40px rgba(143,123,255,.45), inset 0 1px 0 rgba(255,255,255,.05); overflow: hidden; }
+  .term-bar { display: flex; align-items: center; gap: .5rem; padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); }
+  .term-bar i { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,.12); }
+  .term-body { transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .45s; }
+  .term-body.out { transform: translateX(60px); opacity: 0; }
+  .term-body.in { transform: translateX(-60px); opacity: 0; transition: none; }
+  .terminal { overflow: hidden; }
+  .term-bar span { margin-left: auto; font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+  .term-body { font-family: var(--mono); font-size: clamp(.78rem, 1.3vw, .9rem); line-height: 1.9; padding: 1.4rem 1.4rem 1.6rem; min-height: 330px; overflow-x: auto; white-space: pre; }
+  .t-cmd { color: var(--text); } .t-cmd::before { content: "$ "; color: var(--violet); }
+  .t-ok { color: #9DE8C4; } .t-dim { color: var(--muted); } .t-hl { color: var(--cyan); }
+  .cursor { display: inline-block; width: .6em; height: 1.1em; background: var(--cyan); vertical-align: -.2em; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Products */
+  .products { border-top: 1px solid var(--line); }
+  .prod-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; margin-top: 3.5rem; }
+  .prod { position: relative; border-radius: 24px; padding: clamp(2rem, 4vw, 3rem); border: 1px solid var(--line-strong); overflow: hidden; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between; }
+  .prod.main { background: radial-gradient(600px circle at 100% 0%, rgba(102,227,255,.16), transparent 55%), radial-gradient(500px circle at 0% 100%, rgba(143,123,255,.18), transparent 55%), var(--deep); }
+  .prod.next { background: var(--deep); border-style: dashed; }
+  .prod .badge { align-self: flex-start; font-family: var(--mono); font-size: .78rem; padding: .35rem .8rem; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted); }
+  .prod.main .badge { color: var(--cyan); border-color: rgba(102,227,255,.35); }
+  .prod h3 { font-family: var(--display); font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.8rem); letter-spacing: -.04em; margin: 2rem 0 .75rem; line-height: 1; }
+  .prod.next h3 { font-size: clamp(1.4rem, 2.6vw, 1.9rem); font-weight: 500; color: var(--muted); }
+  .prod p { color: var(--muted); margin: 0; max-width: 44ch; }
+  .prod-nexus { padding: clamp(1.6rem, 3vw, 2.4rem); gap: 1.4rem; justify-content: flex-start; }
+  .prod-nexus h3 { margin: 1.1rem 0 .5rem; }
+  .prod-nexus .si-teaser { box-shadow: none; }
+  .prod.alt { padding: 0; background: radial-gradient(500px circle at 100% 0%, rgba(143,123,255,.16), transparent 55%), var(--deep); }
+  .alt-open { all: unset; box-sizing: border-box; display: flex; flex-direction: column; width: 100%; height: 100%; padding: clamp(1.6rem, 3vw, 2.4rem); cursor: pointer; }
+  .alt-open:focus-visible { outline: 2px solid var(--cyan); outline-offset: -4px; border-radius: 22px; }
+  .alt-open h3 { margin: 1.1rem 0 .4rem; font-family: var(--display); font-weight: 700; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -.04em; color: var(--text); line-height: 1; }
+  .alt-lead { color: #B9AEFF !important; font-family: var(--mono); font-size: .9rem; margin: 0 0 1.1rem !important; }
+  .alt-mini { display: block; width: 100%; flex: 1; min-height: 200px; border: 1px solid var(--line); border-radius: 12px; background: #03050A; }
+  .alt-cta { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; font-family: var(--display); font-weight: 500; color: var(--text); }
+  .alt-cta svg { width: 22px; height: 22px; stroke: #B9AEFF; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: ctaNudge 1.4s ease-in-out infinite; }
+  .prod.alt:hover { border-color: rgba(185,174,255,.7); }
+  .alt-card { height: auto; max-height: 90vh; }
+  .alt-body { font-family: var(--body); font-size: .98rem; line-height: 1.6; color: var(--muted); }
+  .alt-big { display: block; width: 100%; aspect-ratio: 16 / 7; border: 1px solid var(--line); border-radius: 12px; background: #03050A; margin-bottom: 1.1rem; }
+  .alt-claim { font-family: var(--display); font-size: 1.25rem; color: var(--text); margin: 0 0 .6rem; }
+  .alt-src { list-style: none; padding: 0; margin: 1rem 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .alt-src li { font-family: var(--mono); font-size: .76rem; color: var(--text); border: 1px solid var(--line-strong); border-radius: 6px; padding: .3rem .65rem; }
+  .alt-status { font-family: var(--mono); font-size: .82rem; color: #B9AEFF; border-top: 1px solid var(--line); padding-top: .9rem; }
+  .alt-status b { color: #FFC857; font-weight: 500; }
+  .prod .rings { position: absolute; right: -80px; top: -80px; width: 340px; height: 340px; pointer-events: none; opacity: .7; }
+
+  /* Directions */
+  .dirs { border-top: 1px solid var(--line); }
+  .dir-list { list-style: none; margin: 3rem 0 0; padding: 0; }
+  .dir-list li { display: grid; grid-template-columns: 1fr 1.3fr; gap: 2rem; padding: 2rem 0; border-top: 1px solid var(--line); transition: padding-left .35s; }
+  .dir-list li:last-child { border-bottom: 1px solid var(--line); }
+  .dir-list li:hover { padding-left: 1rem; }
+  .dir-list h3 { font-family: var(--display); font-weight: 500; font-size: clamp(1.15rem, 2vw, 1.5rem); margin: 0; letter-spacing: -.02em; }
+  .dir-list p { margin: 0; color: var(--muted); }
+
+  /* Contact */
+  .contact { border-top: 1px solid var(--line); text-align: center; overflow: hidden; }
+  .contact::before { content: ""; position: absolute; left: 50%; bottom: -380px; transform: translateX(-50%); width: 1100px; height: 700px; background: radial-gradient(ellipse, rgba(143,123,255,.28), rgba(102,227,255,.08) 45%, transparent 70%); pointer-events: none; }
+  .contact h2 { margin-inline: auto; max-width: 18ch; }
+  .contact .sub { margin: 0 auto 3rem; }
+  .mail { position: relative; display: inline-block; font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 5.5vw, 4rem); letter-spacing: -.03em; text-decoration: none;  }
+  .mail::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.15em; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--violet)); transform: scaleX(.3); transform-origin: left; transition: transform .45s cubic-bezier(.2,.7,.2,1); }
+  .mail:hover::after { transform: scaleX(1); }
+
+  footer { border-top: 1px solid var(--line); padding: 2.5rem 0 3rem; font-size: .86rem; color: var(--muted); }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+  .foot p { margin: 0 0 .3rem; }
+  .foot .logo { font-size: 1rem; }
+
+
+  .con-btn { margin-left: auto; font-family: var(--mono); font-size: .74rem; color: #04060C; background: var(--cyan); border: 0; border-radius: 6px; padding: .32rem .8rem; cursor: pointer; font-weight: 500; }
+  .con-btn:hover { background: #9CEEFF; }
+  .con-btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line-strong); }
+  .telemetry div.hot b { color: #FFC857; }
+  .legend { display: flex; flex-wrap: wrap; gap: .35rem .9rem; padding: .55rem .9rem; border-bottom: 1px solid var(--line); font-size: .68rem; }
+  .legend span { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
+  .legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .log li.warn .src, .log li.warn .msg { color: #FFC857; }
+  .log li.ok .src { color: #7EE2B0; }
+  .rep-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(2,4,9,.6); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  .rep-modal[hidden] { display: none; }
+  .rep-card { width: min(20cm, 94vw); height: min(20cm, 88vh); display: flex; flex-direction: column; background: linear-gradient(180deg, #111A2E, #080C18); border: 1px solid var(--line-strong); border-radius: 16px; box-shadow: 0 40px 120px -20px rgba(0,0,0,.9); font-family: var(--mono); color: var(--muted); }
+  .rep-card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1rem 1.2rem .8rem; border-bottom: 1px solid var(--line); }
+  .rep-card h3 { margin: 0 0 .25rem; font-family: var(--display); font-weight: 500; color: var(--text); font-size: 1.1rem; }
+  .rep-card header span { font-size: .72rem; }
+  .rep-x { background: none; border: 1px solid var(--line-strong); color: var(--text); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+  .rep-body { flex: 1; overflow: auto; padding: .8rem 1.2rem 1.2rem; font-size: .76rem; }
+  .rep-body h4 { margin: 1.1rem 0 .45rem; color: var(--text); font-family: var(--body); font-weight: 600; font-size: .86rem; }
+  .rep-body table { width: 100%; border-collapse: collapse; }
+  .rep-body th, .rep-body td { text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--line); }
+  .rep-body th { color: var(--muted); font-weight: 400; }
+  .rep-body td { color: var(--text); }
+  .rep-body ul { list-style: none; margin: 0; padding: 0; }
+  .rep-body li { padding: .3rem 0; border-bottom: 1px dashed var(--line); color: var(--text); }
+  .rep-body li time { color: var(--muted); margin-right: .7rem; }
+  .rep-body .w, .rep-body li.warn { color: #FFC857; } .rep-body .g, .rep-body li.good { color: #7EE2B0; } .rep-body li.alert, .rep-body .a { color: #FF7A86; } .rep-body li.alt { color: #B9AEFF; }
+  .rep-empty { margin: 0; color: var(--muted); }
+  .rep-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+  .rep-kpi div { border: 1px solid var(--line); border-radius: 10px; padding: .6rem .7rem; }
+  .rep-kpi b { display: block; font-family: var(--display); font-size: 1.3rem; color: var(--text); font-weight: 500; }
+  .rep-kpi span { font-size: .68rem; }
+  .rep-card footer { display: flex; gap: .6rem; justify-content: flex-end; padding: .8rem 1.2rem; border-top: 1px solid var(--line); }
+  .rep-card footer .con-btn { margin-left: 0; }
+  /* NEXUS slide-out panel */
+  .drawer { position: fixed; z-index: 40; top: 84px; bottom: 16px; right: 0; width: var(--drawer-w); transform: translateX(100%); transition: transform .9s cubic-bezier(.2,.75,.15,1); }
+  .drawer.open { transform: none; }
+  .drawer-body { height: 100%; }
+  .drawer .console { background: linear-gradient(180deg, #111A2E, #070B16); height: 100%; max-width: none; display: flex; flex-direction: column; border-right: 0; border-radius: 16px 0 0 16px; box-shadow: -30px 0 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(102,227,255,.06); }
+  .drawer .vp { aspect-ratio: auto; flex: 1 1 auto; min-height: 260px; }
+  .drawer .console { overflow-y: auto; }
+  .con-bottom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); border-top: 1px solid var(--line); }
+  .con-left { border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+  .con-left .telemetry { border-bottom: 1px solid var(--line); flex: 1; }
+  .drawer .log li { white-space: normal; line-height: 1.35; padding: .18rem 0; }
+  .drawer .log { height: auto; max-height: none; min-height: 9.6rem; border-bottom: 0; padding: .7rem 1rem; }
+  .drawer-tab { position: absolute; top: 50%; left: 0; transform: translate(-100%, -50%); transform-origin: right center; width: 42px; padding: .9rem 0 1.1rem; border: 1px solid rgba(102,227,255,.45); border-right: 0; border-radius: 12px 0 0 12px; background: linear-gradient(180deg, #12203A, #080C18); color: var(--cyan); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .6rem; box-shadow: -10px 0 30px -8px rgba(102,227,255,.45); animation: tabBreath 2.6s ease-in-out infinite; transition: background .3s, color .3s, border-color .3s; }
+  .drawer-tab .chev { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; animation: chevNudge 1.3s ease-in-out infinite; }
+  .drawer.open .drawer-tab .chev { transform: rotate(180deg); animation: none; }
+  .drawer-tab span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--display); font-weight: 700; font-size: .82rem; letter-spacing: .28em; white-space: nowrap; }
+  .drawer-tab .tab-alert { display: none; font-size: .74rem; letter-spacing: .14em; }
+  .drawer-tab:hover { color: #fff; border-color: rgba(102,227,255,.9); }
+  .drawer.open .drawer-tab { animation: none; box-shadow: -10px 0 30px -12px rgba(102,227,255,.35); }
+  .drawer-tab.warn { color: #D9B66A; border-color: rgba(217,182,106,.55); animation: tabWarn 3s ease-in-out infinite; }
+  .drawer-tab.alarm { color: #EC7C88; border-color: rgba(236,124,136,.65); animation: tabAlarm 3s ease-in-out infinite; }
+  @keyframes tabAlarm {
+    0%, 8%, 18%, 100% { background: linear-gradient(180deg, #12203A, #080C18); transform: translate(-100%, -50%) scale(1); box-shadow: -10px 0 28px -10px rgba(236,124,136,.3); }
+    4%, 14% { background: #3A1520; transform: translate(-100%, -50%) scale(1.06); box-shadow: -14px 0 40px -8px rgba(236,124,136,.6); }
+  }
+  @keyframes tabWarn {
+    0%, 8%, 18%, 100% { background: linear-gradient(180deg, #12203A, #080C18); transform: translate(-100%, -50%) scale(1); box-shadow: -10px 0 28px -10px rgba(217,182,106,.22); }
+    4%, 14% { background: #2C2414; transform: translate(-100%, -50%) scale(1.04); box-shadow: -14px 0 36px -10px rgba(217,182,106,.45); }
+  }
+  .drawer-tab.alarm .tab-txt, .drawer-tab.warn .tab-txt { display: none; }
+  .drawer-tab.alarm .tab-alert, .drawer-tab.warn .tab-alert { display: inline; }
+  @keyframes tabBreath { 0%, 100% { box-shadow: -8px 0 24px -10px rgba(102,227,255,.35); } 50% { box-shadow: -16px 0 44px -6px rgba(102,227,255,.75); } }
+  @keyframes chevNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
+  .tab-hint { position: absolute; top: 50%; left: -56px; transform: translate(-100%, -50%); width: 210px; white-space: normal; line-height: 1.45; font-family: var(--mono); font-size: .74rem; color: var(--text); background: rgba(10,16,30,.97); border: 1px solid rgba(102,227,255,.45); border-radius: 10px; padding: .6rem .8rem; pointer-events: none; opacity: 0; transition: opacity .5s; z-index: 2; }
+  .tab-hint::after { content: ""; position: absolute; right: -6px; top: 50%; width: 10px; height: 10px; background: inherit; border-right: 1px solid rgba(102,227,255,.45); border-top: 1px solid rgba(102,227,255,.45); transform: translateY(-50%) rotate(45deg); }
+  @media (max-width: 1000px) { .tab-hint { display: none; } }
+  .tab-hint b { color: var(--cyan); font-weight: 500; }
+  .tab-hint.show { opacity: 1; }
+  .drawer.open .tab-hint { display: none; }
+  /* NEXUS teaser in the hero */
+  .si-teaser { position: relative; display: block; width: 100%; text-align: left; font: inherit; color: var(--muted); cursor: pointer; padding: 0; border: 1px solid var(--line-strong); border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, rgba(17,26,46,.9), rgba(7,11,22,.95)); box-shadow: 0 40px 100px -40px rgba(102,227,255,.4); transition: opacity .6s, transform .6s, border-color .3s, box-shadow .3s; }
+  .si-teaser:hover { border-color: rgba(102,227,255,.7); box-shadow: 0 40px 110px -30px rgba(102,227,255,.6); }
+  .si-teaser.flash-warn { border-color: rgba(217,182,106,.6); }
+  .si-teaser.flash-alarm { border-color: rgba(236,124,136,.7); box-shadow: 0 30px 90px -40px rgba(236,124,136,.45); }
+  .tz-head { display: flex; align-items: center; gap: .6rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: .74rem; }
+  .tz-head .live { color: #FF6B78; } .tz-head .live i { width: 7px; height: 7px; border-radius: 50%; background: #FF4D5E; display: inline-block; margin-right: .35rem; animation: led 1.6s steps(1) infinite; }
+  .tz-head b { color: var(--text); font-weight: 500; } .tz-head .tz-time { margin-left: auto; color: var(--cyan); }
+  .tz-map { display: block; width: 100%; aspect-ratio: 16 / 8; background: #03050A; border-bottom: 1px solid var(--line); }
+  .tz-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); font-family: var(--mono); }
+  .tz-stats span { padding: .55rem 1rem; border-right: 1px solid var(--line); font-size: .66rem; display: flex; flex-direction: column; gap: .15rem; }
+  .tz-stats span:last-child { border-right: 0; } .tz-stats b { color: var(--text); font-size: .95rem; font-weight: 500; }
+  .tz-feed { display: block; padding: .6rem 1rem; font-family: var(--mono); font-size: .72rem; color: var(--text); min-height: 2.9em; border-bottom: 1px solid var(--line); }
+  .tz-feed.warn { color: #FFC857; } .tz-feed.alert { color: #FF7A86; } .tz-feed.good { color: #7EE2B0; } .tz-feed.alt { color: #B9AEFF; }
+  .tz-cta { display: flex; align-items: center; justify-content: space-between; padding: .8rem 1rem; font-family: var(--display); font-weight: 500; font-size: .95rem; color: var(--text); }
+  .tz-cta em { font-style: normal; font-family: var(--mono); font-size: .72rem; color: var(--muted); font-weight: 400; }
+  .tz-cta svg { width: 22px; height: 22px; stroke: var(--cyan); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: ctaNudge 1.4s ease-in-out infinite; }
+  @keyframes ctaNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+  @media (max-width: 900px) { :root { --drawer-w: calc(100vw - 44px); } }
+  @media (max-width: 640px) { .drawer { top: 64px; bottom: 10px; } .con-bottom { grid-template-columns: 1fr; } .con-left { border-right: 0; border-bottom: 1px solid var(--line); } .drawer .log { min-height: 6.5rem; } .drawer .console { border-radius: 14px 0 0 14px; } }
+  @media (prefers-reduced-motion: reduce) { .drawer, body { transition: none; } .drawer-tab, .drawer-tab .chev, .tz-cta svg { animation: none !important; } .drawer-tab.alarm { background: #3A0B14; } }
+  /* Docs */
+  .docs { border-top: 1px solid var(--line); }
+  .docs-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; }
+  .docs-filter { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .docs-filter button { font: inherit; font-size: .88rem; color: var(--muted); background: transparent; border: 1px solid var(--line-strong); border-radius: 999px; padding: .45rem 1rem; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+  .docs-filter button:hover { color: var(--text); }
+  .docs-filter button[aria-pressed="true"] { color: var(--void); background: var(--cyan); border-color: var(--cyan); }
+  .doc-list { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; gap: .75rem; }
+  .doc { display: grid; grid-template-columns: 56px 1fr auto; gap: 1.25rem; align-items: center; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); transition: border-color .25s, transform .25s; }
+  .doc:hover { border-color: rgba(102,227,255,.45); transform: translateY(-1px); }
+  .doc-ext { width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; font-family: var(--mono); font-size: .78rem; font-weight: 500; text-transform: uppercase; color: var(--cyan); border: 1px solid rgba(102,227,255,.3); background: rgba(102,227,255,.06); }
+  .doc h3 { margin: 0 0 .2rem; font-size: 1.05rem; font-weight: 500; }
+  .doc p { margin: 0; color: var(--muted); font-size: .92rem; }
+  .doc-meta { font-family: var(--mono); font-size: .78rem; color: var(--muted); margin-top: .35rem; display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
+  .doc-dl { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; padding: .7rem 1.15rem; border-radius: 999px; border: 1px solid var(--line-strong); font-size: .92rem; white-space: nowrap; transition: border-color .2s, color .2s, box-shadow .3s; }
+  .doc-dl:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 6px 30px -10px rgba(102,227,255,.6); }
+  .doc-dl svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .docs-empty { margin-top: 3rem; padding: 2.5rem; border: 1px dashed var(--line-strong); border-radius: 16px; color: var(--muted); text-align: center; }
+  .phone { display: inline-block;  font-family: var(--display); font-weight: 300; font-size: clamp(1.2rem, 3vw, 1.9rem); letter-spacing: -.01em; text-decoration: none; color: var(--text); transition: color .2s; }
+  .phone:hover .cbig-val { color: var(--cyan); }
+  .contact-links { display: flex; flex-direction: column; align-items: center; }
+  .cbig { position: relative; display: inline-flex; flex-direction: column; align-items: center; border: 0; background: none; padding: 2.4rem .6rem .2rem; margin: 0; cursor: copy; color: inherit; }
+  .cbig .cbig-val { user-select: text; -webkit-user-select: text; }
+  .cbig-tip { position: absolute; top: .35rem; left: 50%; transform: translate(-50%, 4px); display: inline-flex; align-items: center; gap: .4rem; font-family: var(--mono); font-size: .76rem; letter-spacing: 0; color: var(--muted); padding: .28rem .7rem .28rem .55rem; border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(8,12,24,.9); opacity: 0; transition: opacity .2s, transform .2s, color .2s, border-color .2s, background .2s; white-space: nowrap; pointer-events: none; -webkit-text-fill-color: currentColor; }
+  .cbig-tip svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .cbig-tip b { font-weight: 500; }
+  .cbig .i-ok, .cbig .t-ok { display: none; }
+  .cbig:hover .cbig-tip, .cbig:focus-visible .cbig-tip, .cbig.done .cbig-tip { opacity: 1; transform: translate(-50%, 0); }
+  .cbig:hover .cbig-tip { color: var(--cyan); border-color: rgba(102,227,255,.45); }
+  .cbig.done .cbig-tip { color: #04060C; background: var(--cyan); border-color: var(--cyan); }
+  .cbig.done .cbig-tip, .cbig.done .cbig-tip b { color: #04060C; -webkit-text-fill-color: #04060C; }
+  .cbig.done .i-copy, .cbig.done .t-copy { display: none; }
+  .cbig.done .i-ok, .cbig.done .t-ok { display: inline; }
+  .cbig.mail .cbig-val { background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cbig.mail::after { left: .6rem; right: .6rem; bottom: -.1em; }
+  .cbig.phone { margin-top: .5rem; }
+
+  @media (max-width: 640px) {
+    .cam-rig { width: 48px; }
+    .doc { grid-template-columns: 44px 1fr; }
+    .doc-ext { width: 44px; height: 44px; font-size: .7rem; }
+    .doc-dl { grid-column: 1 / -1; justify-content: center; }
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    .cam-rig { width: 56px; }
+      .manifesto-grid, .speed-grid, .prod-grid { grid-template-columns: 1fr; }
+    .panels { grid-template-columns: 1fr 1fr; }
+    .foot { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+  @media (max-width: 640px) {
+    .wrap { width: calc(100% - 2rem); }
+    .nav-in { height: auto; padding: .55rem 0; }
+    nav.menu { gap: .4rem; }
+    nav.menu a { height: 40px; font-size: .64rem; letter-spacing: .02em; gap: .35rem; }
+    nav.menu a::before { width: 5px; height: 5px; }
+    header.nav.stuck .logo { max-width: 0; opacity: 0; margin: 0; }
+    .panels { grid-template-columns: 1fr; }
+    .panel { min-height: 0; }
+    .dir-list li { grid-template-columns: 1fr; gap: .6rem; }
+    .pair { grid-template-columns: 1fr; gap: .4rem; }
+      .telemetry b { font-size: .82rem; }
+    .flow canvas { width: 70px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .rise { opacity: 1; transform: none; }
+    .cursor { animation: none; }
+    .dir-list li:hover { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<div class="infobar" id="infobar">
+  <div class="wrap info-in">
+    <a class="info-logo" href="#top" aria-label="Zentra"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#66E3FF"/><stop offset="1" stop-color="#8F7BFF"/></linearGradient></defs><g transform="translate(1.6 1.8)" fill="none" stroke="#2A2470" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20 V10 a4 4 0 0 1 4-4 H20"/><path d="M44 6 H54 a4 4 0 0 1 4 4 V20"/><path d="M58 44 V54 a4 4 0 0 1-4 4 H44"/><path d="M20 58 H10 a4 4 0 0 1-4-4 V44"/><path d="M20 20 H44 L20 44 H44" stroke-width="7"/></g><g fill="none" stroke="url(#lg2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20 V10 a4 4 0 0 1 4-4 H20"/><path d="M44 6 H54 a4 4 0 0 1 4 4 V20"/><path d="M58 44 V54 a4 4 0 0 1-4 4 H44"/><path d="M20 58 H10 a4 4 0 0 1-4-4 V44"/><path d="M20 20 H44 L20 44 H44" stroke-width="7"/></g></svg><span>ZENTRA</span></a>
+    <div class="info-lines">
+      <p class="req-main">ООО «Центра» <span>ИНН&nbsp;5032401325</span> <span>ОГРН&nbsp;1265000064966</span></p>
+      <p><span class="nb">143072, Московская обл., Одинцовский г.о.,</span> <span class="nb">пгт. ВНИИССОК, ул. Михаила Кутузова, д.&nbsp;3А</span></p>
+    </div>
+    <div class="info-contacts">
+      <div class="ct"><span class="ct-label">Телефон</span><span class="ct-val">+7 936 000-02-51</span><button type="button" class="ct-copy" data-copy="+7 936 000-02-51" aria-label="Скопировать телефон"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
+      <div class="ct"><span class="ct-label">Почта</span><span class="ct-val">info@zentra.su</span><button type="button" class="ct-copy" data-copy="info@zentra.su" aria-label="Скопировать почту"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
+    </div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Zentra, на главную">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#66E3FF"/><stop offset="1" stop-color="#8F7BFF"/></linearGradient></defs><g transform="translate(1.6 1.8)" fill="none" stroke="#2A2470" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20 V10 a4 4 0 0 1 4-4 H20"/><path d="M44 6 H54 a4 4 0 0 1 4 4 V20"/><path d="M58 44 V54 a4 4 0 0 1-4 4 H44"/><path d="M20 58 H10 a4 4 0 0 1-4-4 V44"/><path d="M20 20 H44 L20 44 H44" stroke-width="7"/></g><g fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20 V10 a4 4 0 0 1 4-4 H20"/><path d="M44 6 H54 a4 4 0 0 1 4 4 V20"/><path d="M58 44 V54 a4 4 0 0 1-4 4 H44"/><path d="M20 58 H10 a4 4 0 0 1-4-4 V44"/><path d="M20 20 H44 L20 44 H44" stroke-width="7"/></g></svg>
+      ZENTRA
+    </a>
+    <nav class="menu" aria-label="Основное меню">
+      <a href="#approach">Подход</a>
+      <a href="#products">Продукты</a>
+      <a href="#docs">Документация</a>
+      <a href="#directions">Направления</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <canvas id="beam" aria-hidden="true"></canvas>
+    <div class="cam-rig" aria-hidden="true">
+        <svg class="cam" id="cam" viewBox="0 0 200 190">
+          <defs>
+            <linearGradient id="rigFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A2542"/><stop offset="1" stop-color="#0A1120"/></linearGradient>
+            <radialGradient id="lensFill2" cx=".4" cy=".4" r=".7"><stop offset="0" stop-color="#8F7BFF"/><stop offset=".45" stop-color="#1B2A52"/><stop offset="1" stop-color="#04060C"/></radialGradient>
+          </defs>
+          <!-- ceiling mount -->
+          <rect class="r-solid" x="34" y="0" width="132" height="13" rx="2"/>
+          <g class="r-bolt"><circle cx="45" cy="6.5" r="3"/><circle cx="66" cy="6.5" r="3"/><circle cx="134" cy="6.5" r="3"/><circle cx="155" cy="6.5" r="3"/></g>
+          <path class="r-line" d="M42.5 6.5h5M63.5 6.5h5M131.5 6.5h5M152.5 6.5h5"/>
+          <path class="r-solid" d="M70 13 H130 L118 32 H82 Z"/>
+          <path class="r-line" d="M78 13 L88 30 M122 13 L112 30"/>
+          <rect class="r-solid" x="84" y="30" width="32" height="8" rx="1.5"/>
+          <!-- cable -->
+          <path id="cable" class="r-cable" d=""/>
+          <!-- pan output: everything below rotates around the drum axis -->
+          <g id="panG">
+            <path class="r-solid" d="M91 72 H109 L106 98 H94 Z"/>
+            <path class="r-line" d="M95 76 V94 M105 76 V94"/>
+            <g id="tiltG">
+              <path class="r-shield" d="M18 92 H138 L136 97 H26 Z"/>
+              <rect class="r-body" x="26" y="98" width="106" height="26" rx="6" fill="url(#rigFill)"/>
+              <path class="r-line" d="M108 103 v16 M114 103 v16 M120 103 v16"/>
+              <rect class="r-body" x="10" y="101" width="17" height="20" rx="3" fill="#0A1120"/>
+              <ellipse class="r-body" cx="10" cy="111" rx="4" ry="9" fill="url(#lensFill2)"/>
+              <circle id="lensPt" cx="6" cy="111" r=".5" fill="none"/>
+              <text class="r-label" x="36" y="114.5">ZN·PTZ-02</text>
+              <circle id="camLed" cx="128" cy="103.5" r="2" fill="#FF4D5E"/>
+            </g>
+            <!-- tilt servo housing (moves with pan) -->
+            <circle class="r-solid" cx="100" cy="111" r="15"/>
+            <g id="gTilt" transform="translate(100 111)"><path class="r-gear" id="gTiltPath"/><circle class="r-ghost" r="2"/></g>
+            <g id="gTiltP" transform="translate(108.1 102.9)"><path class="r-gear" id="gTiltPPath"/></g>
+            <circle id="tiltPivot" cx="100" cy="111" r=".5" fill="none"/>
+          </g>
+          <!-- pan servo housing (static) -->
+          <circle class="r-solid" cx="100" cy="56" r="21"/>
+          <circle class="r-ghost" cx="100" cy="56" r="17.5"/>
+          <rect class="r-ghost" x="77" y="40" width="9" height="14" rx="1.5"/>
+          <g id="gPan" transform="translate(100 56)"><path class="r-gear" id="gPanPath"/><circle class="r-ghost" r="2.6"/></g>
+          <g id="gPanP" transform="translate(89.8 45.8)"><path class="r-gear" id="gPanPPath"/><circle class="r-ghost" r="1.2"/></g>
+        </svg>
+      </div>
+
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="hero-tag rise"><i></i>Компания-разработчик программного обеспечения</div>
+        <h1 class="rise d1">Разработка на&nbsp;скорости нового времени</h1>
+        <p class="lead rise d2">Центра появилась, когда изменились сами правила создания софта. Мы&nbsp;строим продукты по&nbsp;этим правилам с&nbsp;первого дня — <strong>быстро и&nbsp;точно</strong>.</p>
+        <div class="focus rise d2"><span>IoT</span><span>Big Data</span><span>Ситуационные центры</span><span>Видеоаналитика</span><span>СКУД</span></div>
+        <div class="actions rise d3">
+          <a class="btn primary" href="#contact">Обсудить проект</a>
+          <a class="btn ghost" href="#approach">Как мы работаем</a>
+        </div>
+      </div>
+      <div class="terminal rise d2" aria-label="Пример автоматического конвейера сборки и проверки">
+        <div class="term-bar"><i></i><i></i><i></i><span>zentra / pipeline</span></div>
+        <div class="term-body" id="term"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="appeal" id="appeal">
+    <div class="wrap">
+      <div class="appeal-card">
+        <p class="kicker">// обращение к&nbsp;посетителям</p>
+        <h2>Вы платите за&nbsp;опыт профессионалов, <span class="grad">умноженный на&nbsp;суперсилу&nbsp;ИИ</span></h2>
+        <div class="appeal-grid">
+          <div class="appeal-text">
+            <p class="lead2">Центра&nbsp;— новый проект, но&nbsp;не&nbsp;новая команда. Нас объединяет многолетний опыт в&nbsp;современных системах и&nbsp;платформах разработки&nbsp;— и&nbsp;проекты, где ошибаться было нельзя.</p>
+            <p>Всё это мы&nbsp;умели <strong>ещё до&nbsp;появления ИИ</strong>: проектировали архитектуру, запускали системы в&nbsp;эксплуатацию, работали с&nbsp;огромными потоками данных. Сегодня тот&nbsp;же опыт умножен <strong>в&nbsp;сотню раз</strong>&nbsp;— мы&nbsp;научились многократно сокращать сроки и&nbsp;повышать эффективность, не&nbsp;жертвуя качеством.</p>
+            <p>Мы&nbsp;не&nbsp;пускаем пыль в&nbsp;глаза и&nbsp;не&nbsp;раздуваем штат под&nbsp;«огромный проект», чтобы оправдать смету. Вместо этого&nbsp;— <strong>честные и&nbsp;прозрачные условия</strong>: понятный объём работ, реальные сроки и&nbsp;бюджет, который экономит ваши деньги и&nbsp;время.</p>
+          </div>
+          <div>
+            <p class="bg-title">за&nbsp;плечами команды</p>
+            <ul class="bg-list">
+              <li>Проекты для ЦОДД и&nbsp;РосдорНИИ</li>
+              <li>Государственные аэропорты</li>
+              <li>Интеграторы систем безопасности</li>
+              <li>Крупнейшие системы мониторинга транспорта</li>
+              <li>Зарубежные заказчики</li>
+              <li>Обработка больших массивов данных</li>
+            </ul>
+            <div class="formula" aria-label="Опыт профессионалов, умноженный на ИИ">
+              <span>Опыт</span><span class="op">×</span><span>ИИ</span><span class="op">=</span><span class="x100">×100</span>
+              <small>к&nbsp;скорости и&nbsp;эффективности разработки</small>
+            </div>
+          </div>
+        </div>
+        <div class="appeal-cta">
+          <p>Напишите нам&nbsp;— даже если у&nbsp;вас уже есть подрядчик. Пришлите задачу или текущую смету, и&nbsp;мы&nbsp;подготовим <strong>встречное предложение</strong>: сравните сроки, стоимость и&nbsp;подход и&nbsp;примите решение на&nbsp;цифрах.</p>
+          <div class="btns">
+            <a class="btn primary" href="#contact">Связаться с&nbsp;нами</a>
+            <a class="btn ghost" href="#contact">Сравнить с&nbsp;текущим подрядчиком</a>
+          </div>
+        </div>
+        <p class="appeal-sign">— команда Центры</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="manifesto">
+    <div class="wrap manifesto-grid">
+      <p class="big">Большинство компаний перестраивают старые процессы под&nbsp;новые инструменты. <em>Нам перестраивать нечего.</em></p>
+      <div class="body">
+        <p>Интеллектуальные ассистенты в&nbsp;разработке, полная автоматизация сборки и&nbsp;проверки, спрос на&nbsp;отечественные решения — всё это совпало по&nbsp;времени с&nbsp;рождением Центры.</p>
+        <p>Поэтому у&nbsp;нас нет наследия, которое тормозит. Команда, инструменты и&nbsp;процессы изначально спроектированы так, чтобы путь от&nbsp;идеи до&nbsp;работающего продукта занимал недели, а&nbsp;не&nbsp;кварталы.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach">
+    <div class="wrap">
+      <p class="kicker">// подход</p>
+      <h2>Ультрасовременный стек процессов</h2>
+      <p class="sub">Шесть принципов, которые дают нам скорость без потери качества.</p>
+
+      <div class="panels">
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="6"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6M8.7 8.7l4.2 4.2M27.1 27.1l4.2 4.2M8.7 31.3l4.2-4.2M27.1 12.9l4.2-4.2"/></svg>
+          <h3>ИИ в каждом этапе</h3>
+          <p>Интеллектуальные ассистенты помогают проектировать, писать код, тесты и документацию. Инженер решает задачу, рутину берёт машина.</p>
+        </div>
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><path d="M6 20h8l4-10 4 20 4-10h8"/></svg>
+          <h3>Непрерывная поставка</h3>
+          <p>Каждое изменение автоматически собирается, проверяется и доставляется. Релизы маленькие, частые и предсказуемые.</p>
+        </div>
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><rect x="6" y="6" width="11" height="11" rx="2"/><rect x="23" y="6" width="11" height="11" rx="2"/><rect x="6" y="23" width="11" height="11" rx="2"/><rect x="23" y="23" width="11" height="11" rx="2"/><path d="M17 11.5h6M11.5 17v6M28.5 17v6M17 28.5h6"/></svg>
+          <h3>API-first архитектура</h3>
+          <p>Системы собираются из независимых сервисов с чёткими контрактами. Их легко масштабировать и встраивать в любой ландшафт.</p>
+        </div>
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><path d="M20 5l13 5v9c0 8-5.5 13.5-13 16-7.5-2.5-13-8-13-16v-9z"/><path d="M14 20l4.5 4.5L27 16"/></svg>
+          <h3>Проверка на каждом шаге</h3>
+          <p>Автотесты, статический анализ и ревью встроены в процесс. Ошибка обнаруживается за минуты и не у заказчика.</p>
+        </div>
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><path d="M8 32V14l12-7 12 7v18"/><path d="M8 14l12 7 12-7M20 21v11"/></svg>
+          <h3>Инфраструктура как код</h3>
+          <p>Окружение описано в коде и разворачивается одной командой — в облаке или на сервере заказчика.</p>
+        </div>
+        <div class="panel">
+          <svg viewBox="0 0 40 40"><circle cx="14" cy="15" r="5"/><circle cx="27" cy="15" r="5"/><path d="M5 33c1.5-6 5-9 9-9s7.5 3 9 9M22 25.5c1.5-1 3-1.5 5-1.5 4 0 7.5 3 9 9"/></svg>
+          <h3>Компактные команды</h3>
+          <p>Небольшие группы сильных инженеров с полной ответственностью за результат. Меньше согласований, больше дела.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="speed">
+    <div class="wrap speed-grid">
+      <div>
+        <p class="kicker">// скорость и точность</p>
+        <h2>Быстро — потому что точно</h2>
+        <p class="sub">Скорость у нас — следствие точности. Когда каждый шаг автоматически проверен, не нужно возвращаться и переделывать.</p>
+        <div class="pairs">
+          <div class="pair"><b>Прототип</b><span>Первая работающая версия — за дни, чтобы решения принимались на реальном продукте, а не на слайдах.</span></div>
+          <div class="pair"><b>Релизы</b><span>Обновления выходят часто и без простоя: изменения проходят весь конвейер проверок автоматически.</span></div>
+          <div class="pair"><b>Прозрачность</b><span>Заказчик видит прогресс в реальном времени: сборки, тесты, стенды.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products" id="products">
+    <div class="wrap">
+      <p class="kicker">// продукты</p>
+      <h2>Собственные продукты</h2>
+      <p class="sub">Помимо заказной разработки, мы создаём и лицензируем собственное программное обеспечение. Нажмите на продукт, чтобы посмотреть его в работе.</p>
+
+      <div class="prod-grid">
+        <article class="prod main prod-nexus">
+          <div class="prod-top">
+            <div>
+              <span class="badge">Один из первых продуктов · live</span>
+              <h3>Nexus</h3>
+              <p>Ситуационный центр здания: люди, доступ, камеры, обходы и графики персонала на одном экране. Ниже — живая модель бизнес-центра на 8 этажей.</p>
+            </div>
+          </div>
+          <button type="button" class="si-teaser" id="siTeaser" aria-controls="drawer">
+        <span class="tz-head"><span class="live"><i></i>LIVE</span><b>NEXUS</b> · ситуационный центр<span class="tz-time" id="tzTime">—</span></span>
+        <canvas class="tz-map" id="tzMap"></canvas>
+        <span class="tz-stats"><span>В здании<b id="tzIn">—</b></span><span>Этаж на экране<b id="tzFl">—</b></span><span>Отклонения<b id="tzDev">0</b></span></span>
+        <span class="tz-feed" id="tzFeed">Подключение к зданию…</span>
+        <span class="tz-cta">Открыть NEXUS <em>8 этажей · 96 камер</em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+        </article>
+        <article class="prod alt">
+          <button type="button" class="alt-open" id="altOpen" aria-haspopup="dialog">
+            <span class="badge">В разработке</span>
+            <h3>AltGeo</h3>
+            <p class="alt-lead">Позиционирование там, где GPS бессилен</p>
+            <canvas class="alt-mini" id="altMini"></canvas>
+            <span class="alt-cta">Подробнее<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs" id="docs">
+    <div class="wrap">
+      <p class="kicker">// документация</p>
+      <div class="docs-head">
+        <div>
+          <h2>Документация</h2>
+          <p class="sub">Описания продуктов, руководства и технические материалы. Все файлы доступны для прямого скачивания.</p>
+        </div>
+        <div class="docs-filter" id="docs-filter" role="group" aria-label="Фильтр по продукту"></div>
+      </div>
+      <ul class="doc-list" id="doc-list"></ul>
+      <div class="docs-empty" id="docs-empty" hidden>Материалы появятся здесь в ближайшее время.</div>
+    </div>
+  </section>
+
+  <section class="dirs" id="directions">
+    <div class="wrap">
+      <p class="kicker">// направления</p>
+      <h2>Что мы разрабатываем</h2>
+      <ul class="dir-list">
+        <li><h3>Программные продукты на заказ</h3><p>От идеи и прототипа до промышленной эксплуатации и сопровождения.</p></li>
+        <li><h3>Интернет вещей и оборудование</h3><p>Интеграция с контроллерами, датчиками, метками и системами безопасности.</p></li>
+        <li><h3>Платформы данных и API</h3><p>Сбор, обработка и выдача данных для внутренних систем и партнёров.</p></li>
+        <li><h3>Интеллектуальные модули</h3><p>Распознавание, прогнозирование и автоматизация решений внутри ваших процессов.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <p class="kicker">// контакт</p>
+      <h2>Расскажите о задаче</h2>
+      <p class="sub">Ответим в течение рабочего дня и предложим, как решить её быстрее. Уже работаете с подрядчиком? Пришлите ТЗ или смету — подготовим встречное предложение для сравнения.</p>
+      <div class="contact-links">
+        <button type="button" class="cbig mail" data-copy="info@zentra.su" aria-label="Скопировать адрес почты info@zentra.su"><span class="cbig-tip"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-copy" d="M9 9h11v11H9zM5 15V5a1 1 0 0 1 1-1h9"/><path class="i-ok" d="M5 12.5l4.5 4.5L19 7.5"/></svg><b class="t-copy">Скопировать</b><b class="t-ok">Скопировано</b></span><span class="cbig-val">info@zentra.su</span></button>
+        <button type="button" class="cbig phone" data-copy="+7 936 000-02-51" aria-label="Скопировать телефон +7 936 000-02-51"><span class="cbig-tip"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-copy" d="M9 9h11v11H9zM5 15V5a1 1 0 0 1 1-1h9"/><path class="i-ok" d="M5 12.5l4.5 4.5L19 7.5"/></svg><b class="t-copy">Скопировать</b><b class="t-ok">Скопировано</b></span><span class="cbig-val">+7 936 000-02-51</span></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<aside class="drawer" id="drawer" aria-label="NEXUS — ситуационный центр">
+  <button type="button" class="drawer-tab" id="drawerTab" aria-expanded="false" aria-controls="drawer" aria-label="Открыть NEXUS — ситуационный центр">
+    <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    <span class="tab-txt">NEXUS</span><span class="tab-alert" id="tabAlertTxt">NEXUS · нештатная ситуация</span>
+  </button>
+  <div class="tab-hint" id="tabHint">Живой ситуационный центр здания — <b>откройте NEXUS</b></div>
+  <div class="drawer-body" id="scene">
+    <div class="console">
+      <div class="con-head">
+        <span class="live"><i></i>LIVE</span>
+        <span class="con-title">NEXUS · Ситуационный центр · БЦ, 8 этажей</span>
+        <button type="button" class="con-btn" id="repBtn">Отчёт</button>
+      </div>
+      <div class="vp"><canvas id="vp"></canvas></div>
+      <div class="con-bottom">
+        <div class="con-left">
+          <div class="telemetry">
+            <div><span>Этаж</span><b id="t-floor">—</b></div>
+            <div><span>На этаже</span><b id="t-on">—</b></div>
+            <div><span>В здании</span><b id="t-tot">—</b></div>
+            <div><span>Обход охраны</span><b id="t-round">—</b></div>
+            <div><span>Отклонения</span><b id="t-dev">0</b></div>
+            <div><span>Без BLE-метки</span><b id="t-notag">0</b></div>
+          </div>
+          <div class="legend">
+            <span><i style="background:#7EE2B0"></i>Охрана</span><span><i style="background:#FFC857"></i>Электрики</span><span><i style="background:#4DA3FF"></i>Сантехники</span><span><i style="background:#FF8FD0"></i>Уборка</span><span><i style="background:#66E3FF"></i>Арендаторы</span><span><i style="background:#B9AEFF"></i>Посетители</span><span><i style="background:#FF4D5E"></i>Без ID</span><span><i style="background:rgba(233,238,248,.9);box-shadow:0 0 0 3px rgba(233,238,248,.18)"></i>в поле камеры</span>
+          </div>
+          <div class="con-foot">
+            <div class="flow"><span>Перемещения</span><canvas id="spark"></canvas><b id="t-rate">—</b></div>
+            <div class="dev"><span>Камеры</span><b>96 / 96</b></div>
+          </div>
+        </div>
+        <ul class="log" id="log"></ul>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="rep-modal" id="repModal" hidden>
+  <div class="rep-card" role="dialog" aria-modal="true" aria-labelledby="repTitle">
+    <header><div><h3 id="repTitle">Отчёт NEXUS</h3><span id="repPeriod"></span></div><button type="button" class="rep-x" id="repClose" aria-label="Закрыть">×</button></header>
+    <div class="rep-body" id="repBody"></div>
+    <footer><button type="button" class="con-btn" id="repDl">Скачать .txt</button><button type="button" class="con-btn ghost" id="repClose2">Закрыть</button></footer>
+  </div>
+</div>
+
+<div class="rep-modal" id="altModal" hidden>
+  <div class="rep-card alt-card" role="dialog" aria-modal="true" aria-labelledby="altTitle">
+    <header><div><h3 id="altTitle">AltGeo</h3><span>Система позиционирования объектов в условиях плохих или отсутствующих координат GPS</span></div><button type="button" class="rep-x" id="altClose" aria-label="Закрыть">×</button></header>
+    <div class="rep-body alt-body">
+      <canvas class="alt-big" id="altBig"></canvas>
+      <p class="alt-claim">GPS пропал — объект не потерян.</p>
+      <p>Тоннели, подземные парковки, плотная застройка, склады и помехи: спутниковый сигнал исчезает или «прыгает» на сотни метров. AltGeo продолжает вести объект без разрывов, объединяя Wi-Fi, BLE-маяки, базовые станции сотовой связи и инерциальные датчики в один непрерывный трек.</p>
+      <ul class="alt-src"><li>Wi-Fi</li><li>BLE-маяки</li><li>Сотовые станции</li><li>Инерциальная навигация</li><li>Привязка к карте</li></ul>
+      <div class="alt-status"><b>Статус: в разработке.</b> Скоро появится дополнительная информация.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="#top" aria-label="Zentra, наверх"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#66E3FF"/><stop offset="1" stop-color="#8F7BFF"/></linearGradient></defs><g fill="none" stroke="url(#lg3)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20 V10 a4 4 0 0 1 4-4 H20"/><path d="M44 6 H54 a4 4 0 0 1 4 4 V20"/><path d="M58 44 V54 a4 4 0 0 1-4 4 H44"/><path d="M20 58 H10 a4 4 0 0 1-4-4 V44"/><path d="M20 20 H44 L20 44 H44" stroke-width="7"/></g></svg>ZENTRA</a>
+    <p>© <span id="year">2026</span> ООО «Центра»</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(function () { document.body.classList.add('loaded'); });
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Nav border on scroll
+  var nav = document.getElementById('nav');
+  var info = document.getElementById('infobar');
+  function onScroll() { var stuck = scrollY > info.offsetHeight - 1; nav.classList.toggle('scrolled', stuck); nav.classList.toggle('stuck', stuck); }
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
+
+  // Panel cursor glow
+  document.querySelectorAll('.panel').forEach(function (p) {
+    p.addEventListener('pointermove', function (e) {
+      var r = p.getBoundingClientRect();
+      p.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      p.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  // Copy contacts
+  document.querySelectorAll('.ct-copy, .cbig').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.getAttribute('data-copy');
+      function ok() { b.classList.add('done'); clearTimeout(b._t); b._t = setTimeout(function () { b.classList.remove('done'); }, 1600); }
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(v).then(ok, fallback); else fallback();
+      function fallback() { var t = document.createElement('textarea'); t.value = v; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) {} document.body.removeChild(t); }
+    });
+  });
+
+  // Hero: tracking camera + situation-center console
+  (function () {
+    var hero = document.querySelector('.hero');
+    var beam = document.getElementById('beam'), bx = beam.getContext('2d');
+    var cam = document.getElementById('cam');
+    var panG = document.getElementById('panG'), tiltG = document.getElementById('tiltG');
+    var gPan = document.getElementById('gPan'), gPanP = document.getElementById('gPanP');
+    var gTilt = document.getElementById('gTilt'), gTiltP = document.getElementById('gTiltP');
+    var lensPt = document.getElementById('lensPt'), pivotPt = document.getElementById('tiltPivot'), cable = document.getElementById('cable');
+    // involute-ish gear outline: n teeth, root radius r, tooth height h
+    function gearPath(r, n, h) {
+      var d = '', step = Math.PI * 2 / n;
+      for (var i = 0; i < n; i++) {
+        var a0 = i * step, pts = [[a0, r], [a0 + step * .18, r + h], [a0 + step * .5, r + h], [a0 + step * .68, r], [a0 + step, r]];
+        pts.forEach(function (p, j) { var x = (Math.cos(p[0]) * p[1]).toFixed(2), y = (Math.sin(p[0]) * p[1]).toFixed(2); d += (i === 0 && j === 0 ? 'M' : 'L') + x + ' ' + y; });
+      }
+      d += 'Z';
+      for (var k = 0; k < 4; k++) { var ka = k * Math.PI / 2; d += 'M' + (Math.cos(ka) * r * .3).toFixed(2) + ' ' + (Math.sin(ka) * r * .3).toFixed(2) + 'L' + (Math.cos(ka) * r * .8).toFixed(2) + ' ' + (Math.sin(ka) * r * .8).toFixed(2); }
+      return d;
+    }
+    document.getElementById('gPanPath').setAttribute('d', gearPath(8.6, 20, 1.5));
+    document.getElementById('gPanPPath').setAttribute('d', gearPath(3.6, 9, 1.3));
+    document.getElementById('gTiltPath').setAttribute('d', gearPath(6.8, 16, 1.3));
+    document.getElementById('gTiltPPath').setAttribute('d', gearPath(2.9, 8, 1.1));
+    // servo model: PD loop with torque (acceleration) and speed limits -> inertia, overshoot, settling
+    function Servo(kp, kd, vmax, amax, lo, hi) { this.a = 0; this.v = 0; this.kp = kp; this.kd = kd; this.vmax = vmax; this.amax = amax; this.lo = lo; this.hi = hi; }
+    Servo.prototype.step = function (target, dt) {
+      target = Math.max(this.lo, Math.min(this.hi, target));
+      var acc = this.kp * (target - this.a) - this.kd * this.v;
+      acc = Math.max(-this.amax, Math.min(this.amax, acc));
+      this.v = Math.max(-this.vmax, Math.min(this.vmax, this.v + acc * dt));
+      this.a += this.v * dt;
+      if (this.a < this.lo) { this.a = this.lo; this.v = 0; } if (this.a > this.hi) { this.a = this.hi; this.v = 0; }
+    };
+    var pan = new Servo(38, 10.5, 95, 420, -48, 28);    // heavy base axis: slower, more inertia
+    var tilt = new Servo(70, 14, 180, 900, -52, 34);    // light head axis: faster
+    function rot(x, y, cx, cy, deg) { var r = deg * Math.PI / 180, c = Math.cos(r), sn = Math.sin(r); return [cx + (x - cx) * c - (y - cy) * sn, cy + (x - cx) * sn + (y - cy) * c]; }
+    function center(el) { var b = el.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; }
+    var vp = document.getElementById('vp'), vx = vp.getContext('2d');
+    var spark = document.getElementById('spark'), sx = spark.getContext('2d');
+    var el = function (id) { return document.getElementById(id); };
+    var tFl = el('t-floor'), tOn = el('t-on'), tTot = el('t-tot'), tRnd = el('t-round'), tDev = el('t-dev'), tNt = el('t-notag'), tR = el('t-rate');
+    var logEl = el('log');
+    var FLOOR_W = 48, FLOOR_H = 30, COLS = 'ABCDEF', ROWS = 4;
+    var dpr = 1, U = 1;
+
+    function fit(c) {
+      var r = c.getBoundingClientRect(); dpr = Math.min(devicePixelRatio || 1, 2);
+      c.width = Math.max(1, r.width * dpr); c.height = Math.max(1, r.height * dpr);
+      c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+      return r;
+    }
+    var H = fit(beam), V = fit(vp), S = fit(spark);
+    addEventListener('resize', function () { H = fit(beam); V = fit(vp); S = fit(spark); });
+    if (window.ResizeObserver) new ResizeObserver(function () { V = fit(vp); S = fit(spark); }).observe(vp);
+
+    // Target: real pointer when active, autonomous patrol otherwise
+    var mouse = null, lastMove = -1e9, isMouse = false, focus = 0, lockLogged = false, lockAt = 0;
+    var scene = document.getElementById('scene');
+    function onPointer(x, y) { mouse = { x: x, y: y }; lastMove = performance.now(); }
+    addEventListener('pointermove', function (e) { isMouse = e.pointerType === 'mouse'; onPointer(e.clientX, e.clientY); }, { passive: true });
+    document.addEventListener('mouseleave', function () { mouse = null; });
+    document.documentElement.addEventListener('mouseleave', function () { mouse = null; });
+    addEventListener('touchmove', function (e) { var t = e.touches[0]; if (t) onPointer(t.clientX, t.clientY); }, { passive: true });
+
+    var tgt = null, trail = [], prevM = null, speed = 0, zone = '', tracking = false;
+
+    function pad(n, w) { n = String(n); while (n.length < w) n = '0' + n; return n; }
+    function stamp() { var d = new Date(); return pad(d.getHours(), 2) + ':' + pad(d.getMinutes(), 2) + ':' + pad(d.getSeconds(), 2) + '.' + pad(d.getMilliseconds(), 3); }
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+    // log queue: one line every 2.8 s so visitors can read; scenario lines have priority, routine lines are dropped when busy
+    var lq = [];
+    function log(src, msg, cls) {
+      var pri = cls === 'alert' || cls === 'good' || cls === 'alt' || cls === 'warn';
+      if (!pri) { var n = 0; lq.forEach(function (e) { if (!e.pri) n++; }); if (n >= 2) return; }
+      lq.push({ src: src, msg: msg, cls: cls, pri: pri, ts: clockStr() });
+    }
+    setInterval(function () {
+      if (!lq.length) return;
+      var i = -1; for (var j = 0; j < lq.length; j++) if (lq[j].pri) { i = j; break; }
+      var e = lq.splice(i >= 0 ? i : 0, 1)[0]; pushLog(e.src, e.msg, e.cls, e.ts);
+    }, 2800);
+    function pushLog(src, msg, cls, ts) {
+      var li = document.createElement('li'); li.className = 'new' + (cls ? ' ' + cls : '');
+      li.innerHTML = '<span>' + (ts || clockStr()) + '</span>  <span class="src">' + src + '</span>  <span class="msg">' + msg + '</span>';
+      logEl.insertBefore(li, logEl.firstChild);
+      while (logEl.children.length > 7) logEl.removeChild(logEl.lastChild);
+    }
+    // ======================================================================
+    // NEXUS СИ — офисный бизнес-центр, 8 этажей, одинаковая планировка
+    // ======================================================================
+    var FLOORS = 8, SPEED = 30;                         // 1 с реального времени = 30 с времени здания
+    var simSec = (9 * 60 + 45) * 60;
+    function simMin() { return simSec / 60; }
+    function hhmm(m) { m = Math.floor(m) % 1440; return pad(Math.floor(m / 60), 2) + ':' + pad(m % 60, 2); }
+    function clockStr() { var s = Math.floor(simSec) % 86400; return pad(Math.floor(s / 3600), 2) + ':' + pad(Math.floor(s / 60) % 60, 2) + ':' + pad(s % 60, 2); }
+
+    // --- floor plan
+    var WALLS = [], DOORS = [];
+    function hw(y, x1, x2, gaps) { var xs = x1; (gaps || []).forEach(function (g) { WALLS.push([xs, y, g[0], y]); DOORS.push([g[0], y, g[1], y]); xs = g[1]; }); WALLS.push([xs, y, x2, y]); }
+    function vw(x, y1, y2, gaps) { var ys = y1; (gaps || []).forEach(function (g) { WALLS.push([x, ys, x, g[0]]); DOORS.push([x, g[0], x, g[1]]); ys = g[1]; }); WALLS.push([x, ys, x, y2]); }
+    function door(c, w) { return [c - (w || .022), c + (w || .022)]; }
+    hw(0, 0, 1); hw(1, 0, 1, [[.06, .14]]); vw(0, 0, 1); vw(1, 0, 1);
+    hw(.42, 0, 1, [door(.1), door(.29), door(.5), door(.71), door(.9)]);
+    hw(.58, 0, 1, [[.04, .2], [.27, .41], door(.57), door(.775), door(.925)]);
+    vw(.2, 0, .42); vw(.38, 0, .42); vw(.62, 0, .42, [[.14, .24]]); vw(.8, 0, .42);
+    vw(.24, .58, 1); vw(.44, .58, 1); vw(.7, .58, 1); vw(.85, .58, 1);
+    var RM = [
+      { k: 'o1', x1: 0, x2: .2, y1: 0, y2: .42, t: 'office', n: 'Офис %.01' },
+      { k: 'o2', x1: .2, x2: .38, y1: 0, y2: .42, t: 'office', n: 'Офис %.02' },
+      { k: 'o3', x1: .38, x2: .62, y1: 0, y2: .42, t: 'office', n: 'Офис %.03' },
+      { k: 'o4', x1: .62, x2: .8, y1: 0, y2: .42, t: 'office', n: 'Офис %.04' },
+      { k: 'el', x1: .8, x2: 1, y1: 0, y2: .42, t: 'electric', n: 'Электрощитовая' },
+      { k: 'hall', x1: 0, x2: .24, y1: .58, y2: 1, t: 'hall', n: 'Холл' },
+      { k: 'lift', x1: .24, x2: .44, y1: .58, y2: 1, t: 'lift', n: 'Лифты · лестница' },
+      { k: 'o5', x1: .44, x2: .7, y1: .58, y2: 1, t: 'office', n: 'Офис %.05' },
+      { k: 'wc', x1: .7, x2: .85, y1: .58, y2: 1, t: 'wc', n: 'Санузлы' },
+      { k: 'tech', x1: .85, x2: 1, y1: .58, y2: 1, t: 'tech', n: 'Техпомещение' },
+      { k: 'cor', x1: 0, x2: 1, y1: .42, y2: .58, t: 'corridor', n: 'Коридор' }
+    ];
+    var RMK = {}; RM.forEach(function (r) { RMK[r.k] = r; });
+    function roomLabel(r, f) {
+      if (f === 1 && r.k === 'hall') return 'Вход · СКУД';
+      if (f === 1 && r.k === 'tech') return 'Пост охраны';
+      return r.n.replace('%', f);
+    }
+    function roomAt(x, y) { for (var i = 0; i < RM.length; i++) { var r = RM[i]; if (x >= r.x1 && x <= r.x2 && y >= r.y1 && y <= r.y2) return r; } return RMK.cor; }
+    var LIFT = { x: .34, y: .8 }, KP = { x: .5, y: .5 }, POST = { x: .17, y: .73 }, ENTRY = { x: .1, y: .975 }, GUARDROOM = { x: .925, y: .8 };
+    var BLINDR = [RMK.wc];                                       // в санузлах видеонаблюдение не ведётся
+    function inBlind(x, y) { return BLINDR.some(function (r) { return x > r.x1 && x < r.x2 && y > r.y1 && y < r.y2; }); }
+    var APS = [{ x: .1, y: .2 }, { x: .5, y: .1 }, { x: .9, y: .2 }, { x: .57, y: .85 }, { x: .93, y: .9 }];
+
+    // --- navigation grid
+    var GX = 120, GY = 48, ASP = .55, blocked = new Uint8Array(GX * GY), prev = new Int32Array(GX * GY), queue = new Int32Array(GX * GY);
+    function ci(v, n) { return Math.min(n - 1, Math.max(0, Math.floor(v * n))); }
+    WALLS.forEach(function (w) {
+      if (w[1] === w[3]) { var r = ci(w[1], GY); for (var c = ci(w[0], GX); c <= ci(w[2], GX); c++) blocked[r * GX + c] = 1; }
+      else { var cc = ci(w[0], GX); for (var rr = ci(w[1], GY); rr <= ci(w[3], GY); rr++) blocked[rr * GX + cc] = 1; }
+    });
+    function cellCenter(i) { return { x: (i % GX + .5) / GX, y: (Math.floor(i / GX) + .5) / GY }; }
+    function idx(p) { return ci(p.y, GY) * GX + ci(p.x, GX); }
+    function freeAt(x, y) { return !blocked[ci(y, GY) * GX + ci(x, GX)]; }
+    function snap(p) {
+      if (freeAt(p.x, p.y)) return { x: p.x, y: p.y };
+      var c0 = ci(p.x, GX), r0 = ci(p.y, GY);
+      for (var r = 1; r < 10; r++) for (var dy = -r; dy <= r; dy++) for (var dx = -r; dx <= r; dx++) {
+        var c = c0 + dx, rw = r0 + dy; if (c < 0 || rw < 0 || c >= GX || rw >= GY) continue;
+        if (!blocked[rw * GX + c]) return cellCenter(rw * GX + c);
+      }
+      return { x: p.x, y: p.y };
+    }
+    function los(a, b) { var dx = b.x - a.x, dy = b.y - a.y, n = Math.ceil(Math.max(Math.abs(dx) * GX, Math.abs(dy) * GY) * 2) + 1; for (var i = 1; i <= n; i++) if (!freeAt(a.x + dx * i / n, a.y + dy * i / n)) return false; return true; }
+    var NB = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+    function findPath(a, b) {
+      a = snap(a); b = snap(b);
+      var s = idx(a), g = idx(b); if (blocked[g]) return null;
+      prev.fill(-1); prev[s] = s; var qh = 0, qt = 0; queue[qt++] = s;
+      while (qh < qt) {
+        var cur = queue[qh++]; if (cur === g) break;
+        var cx = cur % GX, cy = (cur - cx) / GX;
+        for (var k = 0; k < 8; k++) {
+          var nx = cx + NB[k][0], ny = cy + NB[k][1];
+          if (nx < 0 || ny < 0 || nx >= GX || ny >= GY) continue;
+          var ni = ny * GX + nx; if (blocked[ni] || prev[ni] !== -1) continue;
+          if (k > 3 && (blocked[cy * GX + nx] || blocked[ny * GX + cx])) continue;
+          prev[ni] = cur; queue[qt++] = ni;
+        }
+      }
+      if (prev[g] === -1) return null;
+      var cells = []; for (var c = g; c !== s; c = prev[c]) cells.push(cellCenter(c)); cells.reverse(); cells.push(b);
+      var out = [], from = a, i = 0;
+      while (i < cells.length) { var j = cells.length - 1; while (j > i && !los(from, cells[j])) j--; out.push(cells[j]); from = cells[j]; i = j + 1; }
+      return out;
+    }
+    function follow(o, dt, sp) {
+      if (!o.path || !o.path.length) return true;
+      var w = o.path[0], dx = w.x - o.x, dy = w.y - o.y, d = Math.hypot(dx, dy * ASP), st = sp * dt;
+      if (d <= st) { o.x = w.x; o.y = w.y; o.path.shift(); return !o.path.length; }
+      o.x += dx / d * st; o.y += dy / d * st; return false;
+    }
+    function roomPoint(k) { var r = RMK[k], p, g = 0; do { p = { x: rnd(r.x1 + .03, r.x2 - .03), y: rnd(r.y1 + .05, r.y2 - .05) }; } while (!freeAt(p.x, p.y) && g++ < 50); return snap(p); }
+    function dist(a, b) { return Math.hypot(a.x - b.x, (a.y - b.y) * ASP); }
+
+    // --- people
+    var ROLE = {
+      guard: { c: '#7EE2B0', t: 'Охрана' }, post: { c: '#7EE2B0', t: 'Охрана' }, elec: { c: '#FFC857', t: 'Электрики' },
+      plumb: { c: '#4DA3FF', t: 'Сантехники' }, clean: { c: '#FF8FD0', t: 'Уборка' }, tenant: { c: '#66E3FF', t: 'Арендаторы' },
+      visitor: { c: '#B9AEFF', t: 'Посетители' }, intruder: { c: '#FF4D5E', t: 'Без ID' }
+    };
+    var SPD = { guard: .05, post: .03, elec: .042, plumb: .042, clean: .034, tenant: .03, visitor: .028, intruder: .026 };
+    var A = [];
+    function agent(role, name, floor, room, extra) {
+      var p = roomPoint(room), o = { role: role, name: name, floor: floor, x: p.x, y: p.y, path: [], dest: null, lift: 0, pause: rnd(0, 3), v: SPD[role] * rnd(.9, 1.1), tag: role !== 'tenant' && role !== 'visitor' && role !== 'intruder', busy: false };
+      for (var k in extra || {}) o[k] = extra[k];
+      A.push(o); return o;
+    }
+    function send(o, floor, p, cb) {
+      p = snap(p); o.dest = { f: floor, p: p, cb: cb };
+      o.path = o.floor === floor ? (findPath(o, p) || []) : (findPath(o, LIFT) || []);
+    }
+    function stepAgent(o, dt) {
+      if (o.lift > 0) {
+        o.lift -= dt;
+        if (o.lift <= 0) { o.floor = o.dest.f; o.x = LIFT.x + rnd(-.02, .02); o.y = LIFT.y; o.path = findPath(o, o.dest.p) || []; }
+        return;
+      }
+      if (o.pause > 0) { o.pause -= dt; return; }
+      if (!o.dest) { if (o.think) o.think(o); return; }
+      if (follow(o, dt, o.v)) {
+        if (o.floor !== o.dest.f) { o.lift = 1.4 + Math.abs(o.dest.f - o.floor) * .45; return; }
+        var cb = o.dest.cb; o.dest = null; if (cb) cb(o);
+      }
+    }
+    function short(n) { return n.split(' ')[0]; }
+
+    var GUARDS = [
+      agent('guard', 'Сидоров А.В.', 1, 'tech'), agent('guard', 'Кравцов Д.И.', 1, 'tech'),
+      agent('guard', 'Мельник О.П.', 1, 'tech'), agent('guard', 'Гусев Р.Н.', 1, 'tech')
+    ];
+    var POSTG = agent('post', 'Захаров И.С.', 1, 'hall'); POSTG.x = POST.x; POSTG.y = POST.y;
+    var ELEC = [agent('elec', 'Орлов В.А.', 1, 'tech'), agent('elec', 'Белов С.С.', 2, 'el'), agent('elec', 'Тихонов Е.М.', 1, 'tech'), agent('elec', 'Ершов К.Л.', 1, 'hall', { offsite: true })];
+    var PLUMB = [agent('plumb', 'Лапин Н.Г.', 1, 'tech'), agent('plumb', 'Фролов А.А.', 1, 'tech')];
+    var CLEAN = [agent('clean', 'Петрова Е.В.', 1, 'hall'), agent('clean', 'Соколова Т.Н.', 1, 'hall'), agent('clean', 'Ахмедова Л.Р.', 1, 'hall')];
+    var ERSHOV = ELEC[3]; ERSHOV.floor = 0;                          // ещё не пришёл в здание
+    var COMPANIES = { 2: ['«Альфа-Софт»', '«Сигма»'], 3: ['«Финпартнёр»', '«Ритм»'], 4: ['«Вектор»', '«Геостар»'], 5: ['«Архбюро»', '«Нордтех»'], 6: ['«Медиагрупп»', '«Юрконсалт»'], 7: ['«Логистик»', '«ПромИнвест»'], 8: ['«Торгсервис»', '«Эко-Дом»'] };
+    function compOffice(f, ci2) { return ci2 === 0 ? pick(['o1', 'o2', 'o3']) : pick(['o4', 'o5']); }
+    function tenantThink(o) {
+      var r = Math.random();
+      if (r < .8) send(o, o.floor, roomPoint(o.office), function (a) { a.pause = rnd(25, 60); });
+      else if (r < .94) send(o, o.floor, roomPoint('wc'), function (a) { a.pause = rnd(4, 8); });
+      else { var f2 = 2 + Math.floor(Math.random() * 7); o.think = null; send(o, f2, roomPoint('o3'), function (a) { a.pause = rnd(10, 18); send(a, a.home, roomPoint(a.office), function (b) { b.pause = rnd(15, 30); b.think = tenantThink; }); }); }
+    }
+    var TEN = [];
+    for (var fl = 2; fl <= 8; fl++) for (var k2 = 0; k2 < 7 + (fl % 2); k2++) {
+      var cidx = k2 < 4 ? 0 : 1, off = compOffice(fl, cidx);
+      var tn0 = agent('tenant', '', fl, off, { home: fl, office: off, comp: COMPANIES[fl][cidx], st: 'off', offsite: true,
+        arriveAt: rnd(9 * 60 + 47, 10 * 60 + 25), lunchAt: rnd(11 * 60 + 54, 12 * 60 + 12), backAt: rnd(12 * 60 + 46, 13 * 60 + 8), lunchOut: Math.random() < .75 });
+      tn0.floor = 0; TEN.push(tn0);
+    }
+    var tenMs = {};
+    function toDesk(o) { o.pause = 0; o.think = null; send(o, o.home, roomPoint(o.office), function (a) { a.pause = rnd(20, 50); a.think = tenantThink; }); }
+    function tenantsTick() {
+      var m = simMin();
+      TEN.forEach(function (o) {
+        if (o.st === 'off' && m >= o.arriveAt && m < o.lunchAt - 5) { o.st = 'work'; o.offsite = false; o.floor = 1; o.x = ENTRY.x + rnd(-.02, .02); o.y = ENTRY.y; toDesk(o); }
+        else if (o.st === 'work' && m >= o.lunchAt && m < o.backAt) {
+          o.st = 'lunch'; o.think = null; o.pause = 0;
+          if (o.lunchOut) send(o, 1, ENTRY, function (a) { a.floor = 0; a.offsite = true; });
+          else send(o, 1, roomPoint('hall'), function (a) { a.pause = 999; });
+        } else if (o.st === 'lunch' && m >= o.backAt) {
+          o.st = 'work'; if (o.offsite) { o.offsite = false; o.floor = 1; o.x = ENTRY.x; o.y = ENTRY.y; } toDesk(o);
+        }
+      });
+      var inOff = TEN.filter(function (o) { return o.st === 'work' && o.floor === o.home; }).length;
+      if (!tenMs.a && m >= 10 * 60 + 20) { tenMs.a = 1; event('СКУД', 'приход сотрудников арендаторов · в офисах ' + inOff + ' из ' + TEN.length, 'ok', 'access'); }
+      if (!tenMs.b && m >= 12 * 60 + 8) { tenMs.b = 1; event('СКУД', 'обеденный перерыв · в офисах ' + inOff + ' из ' + TEN.length + ' · выход через турникеты', 'ok', 'access'); }
+      if (!tenMs.c && m >= 13 * 60 + 12) { tenMs.c = 1; event('СКУД', 'после обеда · в офисах ' + inOff + ' из ' + TEN.length, 'ok', 'access'); }
+    }
+    function idleGuardThink(o) { send(o, 1, pick([roomPoint('tech'), roomPoint('tech'), roomPoint('hall')]), function (a) { a.pause = rnd(8, 20); }); }
+    GUARDS.forEach(function (g) { g.think = idleGuardThink; });
+    POSTG.think = function (o) { send(o, 1, { x: POST.x + rnd(-.015, .015), y: POST.y + rnd(-.02, .02) }, function (a) { a.pause = rnd(6, 14); }); };
+    function staffIdle(o) { send(o, 1, roomPoint('tech'), function (a) { a.pause = rnd(10, 25); }); }
+    ELEC.concat(PLUMB).forEach(function (o) { o.think = staffIdle; });
+    CLEAN.forEach(function (o) { o.think = function (a) { send(a, 1, roomPoint('hall'), function (b) { b.pause = rnd(10, 20); }); }; });
+
+    // --- cameras (same set on every floor; none in toilets)
+    var CAMS = [
+      { id: '01', x: .012, y: .45, room: 'cor', fov: 46, r: .62, aim: [1, .5] }, { id: '02', x: .988, y: .55, room: 'cor', fov: 46, r: .62, aim: [0, .5] },
+      { id: '03', x: .012, y: .02, room: 'o1', fov: 80, r: .5 }, { id: '04', x: .21, y: .02, room: 'o2', fov: 80, r: .45 }, { id: '05', x: .39, y: .02, room: 'o3', fov: 80, r: .6 },
+      { id: '06', x: .79, y: .02, room: 'o4', fov: 80, r: .45 }, { id: '07', x: .988, y: .02, room: 'el', fov: 80, r: .45 },
+      { id: '08', x: .012, y: .98, room: 'hall', fov: 80, r: .5 }, { id: '09', x: .43, y: .98, room: 'lift', fov: 80, r: .5 },
+      { id: '10', x: .69, y: .98, room: 'o5', fov: 80, r: .55 }, { id: '11', x: .988, y: .98, room: 'tech', fov: 80, r: .4 }
+    ];
+    function camAim(c) { var r = RMK[c.room], tx = c.aim ? c.aim[0] : (r.x1 + r.x2) / 2, ty = c.aim ? c.aim[1] : (r.y1 + r.y2) / 2; return Math.atan2((ty - c.y) * ASP, tx - c.x); }
+    function camSees(c, o) {
+      var r = RMK[c.room]; if (o.x < r.x1 || o.x > r.x2 || o.y < r.y1 || o.y > r.y2) return false;
+      var dx = o.x - c.x, dy = (o.y - c.y) * ASP; if (Math.hypot(dx, dy) > c.r) return false;
+      var da = Math.atan2(dy, dx) - camAim(c); while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+      return Math.abs(da) <= c.fov * Math.PI / 360;
+    }
+    var ROLE_RU = { elec: 'электрик', plumb: 'сантехник', clean: 'уборка', guard: 'охрана', post: 'охрана' };
+    function camsTick() {
+      var n = rnow();
+      A.forEach(function (o) {
+        if (o.floor <= 0 || o.lift > 0 || o.offsite) { o.seen = null; return; }
+        var seen = null; for (var i = 0; i < CAMS.length; i++) if (camSees(CAMS[i], o)) { seen = CAMS[i]; break; }
+        var id = seen ? seen.id : null, staff = o.role !== 'tenant' && o.role !== 'visitor' && o.role !== 'intruder';
+        o.camFl = o.camFl || {};
+        var fresh = o.role === 'intruder' ? (n - (o.camLog || 0) > 18) : !o.camFl[o.floor];
+        if (seen && id !== o.seen && (o.role === 'intruder' || (staff && !o.tag)) && fresh) {
+          o.camFl[o.floor] = 1;
+          o.camLog = n; var place = roomLabel(RMK[seen.room], o.floor).toLowerCase(), cam = 'CAM-' + o.floor + '.' + id;
+          if (o.role === 'intruder') event(cam, 'объект без ID зафиксирован · ' + place + ' · эт. ' + o.floor, 'alert', 'incident');
+          else { if (!o.ntc) { o.ntc = 1; STAT.noTag++; } event(cam, o.name + ' (' + ROLE_RU[o.role] + ') определён по лицу · 0.9' + Math.floor(rnd(4, 9)) + ' · BLE-метка не обнаружена · ' + place, 'warn', 'ble', o.floor); }
+        }
+        o.seen = id;
+      });
+    }
+
+    // --- report storage
+    var REP = [];
+    var STAT = { dev: 0, noTag: 0, inc: 0 };
+    function rep(cat, text, lvl) { REP.push({ m: simMin(), cat: cat, text: text, lvl: lvl || '' }); if (REP.length > 400) REP.shift(); }
+    var tzFeed = document.getElementById('tzFeed');
+    function event(src, text, cls, cat, floor) {
+      log(src, text, cls); rep(cat || 'info', text, cls);
+      if (cls === 'warn') { STAT.dev++; if (floor) focusFloor(floor, 2, 22); flagFloor(floor, 'warn'); tabFlash('warn', 'NEXUS · отклонение от графика'); }
+      if (cls === 'alert') tabFlash('alarm');
+      if (cls !== 'ok' && cls !== 'id') { tzFeed.textContent = clockStr().slice(0, 5) + '  ' + src + ' · ' + text; tzFeed.className = 'tz-feed ' + (cls || ''); }
+    }
+
+    // --- which floor the СИ shows
+    var view = { f: 1, until: 0, pri: 0, changedAt: 0 }, floorFlags = {};
+    function rnow() { return performance.now() / 1000; }
+    function focusFloor(f, pri, hold) {
+      if (!f) return; var n = rnow();
+      if (pri > view.pri || n > view.until || f === view.f) {
+        if (view.f !== f) { view.f = f; view.changedAt = n; }
+        view.pri = pri; view.until = Math.max(view.f === f ? view.until : 0, n + hold);
+      }
+    }
+    function flagFloor(f, kind) { if (f) floorFlags[f] = { kind: kind, until: rnow() + 25 }; }
+
+    // --- guard rounds: one round per hour over all floors, guards take turns
+    var ROUNDS = {}, curRound = null;
+    function planRound(h) {
+      var g = GUARDS[h % 4], dev = 'none', skip = [];
+      if (h === 10) { dev = 'skip'; skip = [7, 8]; }
+      else if (h === 11) dev = 'late';
+      else { var r = Math.random(); if (r < .22) dev = 'late'; else if (r < .45) { dev = 'skip'; skip = [8, 7, 6].slice(0, 1 + Math.floor(Math.random() * 2)).sort(); } }
+      ROUNDS[h] = { h: h, g: g, dev: dev, skip: skip, visited: [], started: false, done: false, status: 'ожидается', lateLogged: false, startAt: h * 60 + (dev === 'late' ? 13 : 0) };
+    }
+    function runRound(R) {
+      R.started = true; curRound = R; var g = R.g; g.busy = true; g.think = null;
+      var floors = []; for (var f = 1; f <= FLOORS; f++) if (R.skip.indexOf(f) < 0) floors.push(f);
+      if (R.dev === 'late') event('ОХРАНА', 'обход ' + hhmm(R.h * 60) + ' начат с опозданием 13 мин · ' + g.name, 'ok', 'patrol');
+      else log('ОХРАНА', 'обход ' + hhmm(R.h * 60) + ' начат · ' + g.name, 'ok');
+      rep('patrol', 'Обход ' + hhmm(R.h * 60) + ' начат · ' + g.name);
+      var i = 0;
+      (function next() {
+        if (i >= floors.length) {
+          R.done = true; curRound = null; g.busy = false; g.think = idleGuardThink;
+          send(g, 1, roomPoint('tech'));
+          if (R.skip.length) { R.status = 'не завершён · пропущены эт. ' + R.skip.join(', '); event('ОБХОД', 'обход ' + hhmm(R.h * 60) + ' не завершён · ' + g.name + ' · не отмечены КП этажей ' + R.skip.join(', '), 'warn', 'patrol', R.skip[0]); }
+          else { R.status = R.dev === 'late' ? 'выполнен · опоздание 13 мин' : 'выполнен · 8 / 8 КП'; event('ОБХОД', 'обход ' + hhmm(R.h * 60) + ' выполнен · ' + g.name + ' · 8 / 8 КП', 'ok', 'patrol'); }
+          return;
+        }
+        var f = floors[i];
+        send(g, f, { x: KP.x + rnd(-.01, .01), y: KP.y }, function (a) { R.visited.push(f); rep('patrol', 'КП эт. ' + f + ' отмечена · ' + a.name); a.pause = 1.2; i++; next(); });
+      })();
+    }
+    function roundsTick() {
+      var m = simMin(), h = Math.floor(m / 60);
+      if (h >= 10 && !ROUNDS[h]) planRound(h);
+      var R = ROUNDS[h];
+      if (R && !R.started && !curRound && m >= R.startAt) runRound(R);
+      if (R && R.dev === 'late' && !R.started && !R.lateLogged && m >= h * 60 + 10) {
+        R.lateLogged = true; R.status = 'начат с опозданием';
+        event('ОБХОД', 'обход ' + hhmm(h * 60) + ' не начат · ' + R.g.name + ' · опоздание 10 мин · напоминание отправлено', 'warn', 'patrol', 1);
+      }
+    }
+
+    // --- cleaning schedule
+    var CLEANING = [
+      { o: CLEAN[0], floors: [1, 2, 3], at: 10 * 60 + 0, rooms: ['o1', 'o2', 'o3', 'o4', 'o5'] },
+      { o: CLEAN[1], floors: [4, 5, 6], at: 10 * 60 + 0, rooms: ['o1', 'o2', 'o3', 'o4', 'o5'], late: true },
+      { o: CLEAN[2], floors: [7, 8], at: 10 * 60 + 20, rooms: ['o3', 'o4', 'o5', 'wc'], stray: true }
+    ];
+    function runCleaning(C) {
+      C.started = true; var o = C.o; o.think = null; o.busy = true;
+      log('УБОРКА', o.name + ' · начало уборки эт. ' + C.floors.join(', '), 'ok'); rep('service', 'Уборка эт. ' + C.floors.join(', ') + ' начата · ' + o.name);
+      var list = []; C.floors.forEach(function (f) { C.rooms.forEach(function (r) { list.push([f, r]); }); });
+      if (C.stray) list.splice(2, 0, [list[2][0], 'el']);
+      var i = 0;
+      (function next() {
+        if (i >= list.length) { C.done = true; o.busy = false; o.think = function (a) { send(a, 1, roomPoint('hall'), function (b) { b.pause = rnd(10, 20); }); }; rep('service', 'Уборка эт. ' + C.floors.join(', ') + ' завершена · ' + o.name); log('УБОРКА', o.name + ' · уборка эт. ' + C.floors.join(', ') + ' завершена', 'ok'); return; }
+        var it = list[i];
+        send(o, it[0], roomPoint(it[1]), function (a) {
+          if (it[1] === 'el') event('ДОСТУП', a.name + ' (уборка) в электрощитовой эт. ' + it[0] + ' · доступ графиком не предусмотрен', 'warn', 'service', it[0]);
+          a.pause = it[1] === 'el' ? 4 : rnd(7, 11); i++; next();
+        });
+      })();
+    }
+    function cleaningTick() {
+      var m = simMin();
+      CLEANING.forEach(function (C) {
+        if (C.started) return;
+        if (C.late) {
+          if (m >= C.at + 12 && !C.warned) { C.warned = true; event('УБОРКА', 'уборка эт. ' + C.floors[0] + '–' + C.floors[C.floors.length - 1] + ' по графику с ' + hhmm(C.at) + ' не начата · ' + C.o.name + ' · находится: эт. 1, холл', 'warn', 'service', C.floors[0]); }
+          if (m >= C.at + 18) runCleaning(C);
+        } else if (m >= C.at) runCleaning(C);
+      });
+    }
+
+    // --- maintenance: scheduled inspections + tenant requests
+    var INSPECT = [
+      { o: ELEC[0], kind: 'elec', floors: [1, 2, 3, 4], at: 10 * 60 + 25, room: 'el', what: 'осмотр электрощитовых' },
+      { o: ELEC[1], kind: 'elec', floors: [5, 6, 7, 8], at: 10 * 60 + 25, room: 'el', what: 'осмотр электрощитовых', late: true },
+      { o: PLUMB[0], kind: 'plumb', floors: [1, 2, 3, 4, 5, 6, 7, 8], at: 10 * 60 + 40, room: 'wc', what: 'осмотр санузлов' }
+    ];
+    function runInspect(I) {
+      I.started = true; var o = I.o; o.think = null; o.busy = true; var i = 0;
+      log(I.kind === 'elec' ? 'ЭЛЕКТРИКА' : 'САНТЕХНИКА', o.name + ' · ' + I.what + ' эт. ' + I.floors[0] + '–' + I.floors[I.floors.length - 1], 'ok');
+      rep('service', I.what + ' эт. ' + I.floors[0] + '–' + I.floors[I.floors.length - 1] + ' начат · ' + o.name + (I.late ? ' · опоздание 12 мин' : ''));
+      (function next() {
+        if (i >= I.floors.length) { I.done = true; o.busy = false; o.think = staffIdle; rep('service', I.what + ' завершён · ' + o.name); return; }
+        var f = I.floors[i]; send(o, f, roomPoint(I.room), function (a) { a.pause = rnd(5, 8); i++; next(); });
+      })();
+    }
+    function inspectTick() {
+      var m = simMin();
+      INSPECT.forEach(function (I) {
+        if (I.started) return;
+        if (I.late) {
+          if (m >= I.at + 10 && !I.warned) { I.warned = true; event('ЭЛЕКТРИКА', I.what + ' эт. 5–8 по графику в ' + hhmm(I.at) + ' не начат · ' + I.o.name, 'warn', 'service', 5); }
+          if (m >= I.at + 12) runInspect(I);
+        } else if (m >= I.at) runInspect(I);
+      });
+    }
+    var TICKET_T = 0, ticketN = 140;
+    var ISSUES = [['elec', 'не работает освещение'], ['elec', 'нет питания на розетках'], ['plumb', 'протечка под раковиной'], ['plumb', 'не работает кран']];
+    function ticketTick(dt) {
+      TICKET_T -= dt; if (TICKET_T > 0) return; TICKET_T = rnd(70, 110);
+      var is = pick(ISSUES), team = is[0] === 'elec' ? [ELEC[2], ELEC[0]] : [PLUMB[1], PLUMB[0]];
+      var who = team.filter(function (o) { return !o.busy; })[0]; if (!who) return;
+      var f = 2 + Math.floor(Math.random() * 7), off = pick(['o1', 'o2', 'o3', 'o4', 'o5']), comp = COMPANIES[f][off === 'o4' || off === 'o5' ? 1 : 0];
+      var tn = ++ticketN, t0m = simMin(), place = roomLabel(RMK[off], f).toLowerCase();
+      who.busy = true; who.think = null;
+      event('ЗАЯВКА', '№' + tn + ' · ' + comp + ': ' + is[1] + ', ' + place + ' · назначен ' + who.name, '', 'service');
+      focusFloor(f, 1, 16);
+      send(who, f, roomPoint(off), function (a) {
+        var dm = Math.round(simMin() - t0m);
+        if (dm > 15) event('ЗАЯВКА', '№' + tn + ' · ' + a.name + ' прибыл через ' + dm + ' мин · норматив 15 мин превышен', 'warn', 'service', f);
+        else { log('ЗАЯВКА', '№' + tn + ' · ' + a.name + ' прибыл · ' + dm + ' мин', 'ok'); rep('service', 'Заявка №' + tn + ': ' + a.name + ' на месте через ' + dm + ' мин'); }
+        a.pause = rnd(10, 16);
+        a.think = function (b) { b.think = staffIdle; b.busy = false; rep('service', 'Заявка №' + tn + ' закрыта · ' + b.name); send(b, 1, roomPoint('tech')); };
+      });
+    }
+
+    // --- visitors with guest passes
+    var VNAMES = ['Иванов П.', 'Смирнова А.', 'Кузнецов Д.', 'Попова Е.', 'Васильев М.', 'Новикова О.', 'Фёдоров И.', 'Морозова К.', 'Волков С.', 'Лебедева Н.'];
+    var VIS_T = 6, passN = 117;
+    function visitorTick(dt) {
+      VIS_T -= dt; if (VIS_T > 0) return; VIS_T = rnd(45, 75);
+      if (A.filter(function (o) { return o.role === 'visitor'; }).length >= 3) return;
+      var f = 2 + Math.floor(Math.random() * 7), ci3 = Math.random() < .5 ? 0 : 1, off = compOffice(f, ci3), comp = COMPANIES[f][ci3];
+      var v = agent('visitor', pick(VNAMES), 1, 'hall', { pass: 'G-' + (++passN), host: comp, hf: f, wrong: Math.random() < .3 });
+      v.x = ENTRY.x; v.y = ENTRY.y; v.pause = 0;
+      send(v, 1, { x: POST.x - .04, y: POST.y + .03 }, function (a) {
+        event('СКУД', 'гостевой пропуск ' + a.pass + ' · ' + a.name + ' · к ' + a.host + ', эт. ' + a.hf, '', 'visitor');
+        a.pause = 2.5;
+        var tf = a.wrong ? (a.hf <= 6 ? a.hf + 2 : a.hf - 3) : a.hf;
+        send(a, tf, roomPoint(a.wrong ? 'o3' : off), function (b) {
+          if (b.wrong) {
+            event('СКУД', 'посетитель ' + b.pass + ' на эт. ' + tf + ' · пропуск выдан на эт. ' + b.hf + ' · направлен охранник', 'warn', 'visitor', tf);
+            var g = GUARDS.filter(function (x) { return !x.busy; })[0];
+            if (g) {
+              g.busy = true; g.think = null;
+              send(g, tf, { x: b.x + .03, y: b.y }, function (gg) {
+                event('ОХРАНА', gg.name + ' · посетитель ' + b.pass + ' сопровождён на эт. ' + b.hf, 'ok', 'visitor');
+                b.wrong = false; send(b, b.hf, roomPoint(off), function (c) { c.pause = rnd(25, 40); c.think = leave; });
+                send(gg, b.hf, roomPoint('cor'), function (h) { h.busy = false; h.think = idleGuardThink; });
+              });
+            } else { b.wrong = false; send(b, b.hf, roomPoint(off), function (c) { c.pause = rnd(25, 40); c.think = leave; }); }
+            b.pause = 30;
+          } else { b.pause = rnd(30, 55); b.think = leave; }
+        });
+      });
+    }
+    function leave(o) {
+      o.think = null;
+      send(o, 1, ENTRY, function (a) { rep('visitor', 'Выход · пропуск ' + a.pass + ' сдан · ' + a.name); log('СКУД', 'пропуск ' + a.pass + ' сдан · ' + a.name, 'ok'); A.splice(A.indexOf(a), 1); });
+    }
+
+    // --- staff member without BLE tag recognised by camera
+    var bleDone = false;
+    function bleTick() {
+      if (bleDone || simMin() < 10 * 60 + 5) return; bleDone = true;
+      var o = ERSHOV; o.floor = 1; o.x = ENTRY.x; o.y = ENTRY.y; o.offsite = false; o.tag = false; o.busy = true;
+      send(o, 1, { x: .12, y: .8 }, function (a) {
+        a.pause = 2;
+        send(a, 3, roomPoint('el'), function (b) {
+          b.pause = 14;
+          b.think = function (c) {
+            c.think = null;
+            send(c, 1, { x: POST.x + .03, y: POST.y }, function (d) {
+              d.tag = true; STAT.noTag = Math.max(0, STAT.noTag - 1);
+              event('ОХРАНА', d.name + ' · BLE-метка выдана на посту · привязка к ФИО восстановлена', 'ok', 'ble');
+              d.busy = false; d.think = staffIdle;
+            });
+          };
+        });
+      });
+    }
+
+    // --- incident: unidentified person (intruder) → camera loss → Wi-Fi/BLE/audio → guards
+    var sc = { st: 'idle', t: 5, n: 0, k: 0, obj: null, step: 0, f: 0, team: [] };
+    function mmss(ms) { var s = Math.round(ms / 1000); return pad(Math.floor(s / 60), 2) + ':' + pad(s % 60, 2); }
+    function incidentTick(now, dt) {
+      sc.t -= dt; sc.k += dt;
+      if (sc.st === 'idle' && sc.t <= 0) {
+        var f = 3 + Math.floor(Math.random() * 6);
+        sc.f = f; sc.st = 'alert'; sc.n++; STAT.inc++; sc.start = now; sc.k = 0; sc.step = 0;
+        sc.obj = agent('intruder', 'без ID', f, 'lift'); sc.obj.x = LIFT.x; sc.obj.y = LIFT.y - .08; sc.obj.pause = 0; sc.obj.tag = false;
+        send(sc.obj, f, roomPoint('wc'));
+        sc.obj.camLog = rnow(); sc.obj.seen = '09';
+        event('ТРЕВОГА', 'CAM-' + f + '.09 · эт. ' + f + ' · объект без ID вышел из лифта · лицо / походка / BLE — нет совпадений', 'alert', 'incident');
+        flagFloor(f, 'alert');
+      }
+      if (sc.st === 'idle') return;
+      focusFloor(sc.f, 3, 3); flagFloor(sc.f, 'alert');
+      if (sc.st === 'alert') {
+        if (sc.step === 0 && sc.k > 3) {
+          sc.step = 1;
+          sc.team = GUARDS.filter(function (g) { return !g.busy; }).slice(0, 2);
+          if (sc.team.length < 2) sc.team = sc.team.concat([POSTG]).slice(0, 2);
+          sc.team.forEach(function (g) { g.busy = true; g.think = null; send(g, sc.f, { x: KP.x, y: KP.y }); });
+          event('ГР', 'группа реагирования: ' + sc.team.map(function (g) { return g.name; }).join(', ') + ' → эт. ' + sc.f, 'alert', 'incident');
+        }
+        if (inBlind(sc.obj.x, sc.obj.y)) {
+          sc.st = 'lost'; sc.k = 0; sc.step = 0;
+          event('CAM-' + sc.f + '.07', 'объект вошёл в санузел эт. ' + sc.f + ' · видеонаблюдение не ведётся', 'alert', 'incident');
+        }
+      } else if (sc.st === 'lost') {
+        var steps = [[1.5, 'NEXUS', 'видео недоступно · альтернативные источники: Wi-Fi · BLE · аудиоконтроль', 'alert'],
+          [4.5, 'Wi-Fi', 'смартфон объекта · AP-' + sc.f + '.4, AP-' + sc.f + '.5 · RSSI −' + Math.floor(rnd(58, 66)) + ' / −' + Math.floor(rnd(67, 74)) + ' дБм', 'alt'],
+          [7.5, 'BLE', 'сигнал устройства · маяки эт. ' + sc.f + ' · трилатерация', 'alt'],
+          [10.5, 'АУДИО', 'шаги · санузлы эт. ' + sc.f + ' · ' + rnd(.78, .9).toFixed(2), 'alt']];
+        if (sc.step < steps.length && sc.k > steps[sc.step][0]) { var s = steps[sc.step]; event(s[1], s[2], s[3], 'incident'); sc.step++; }
+        if (sc.k > 13.5) {
+          sc.st = 'found'; sc.k = 0; sc.obj.path = []; sc.obj.dest = null; sc.obj.pause = 999;
+          event('NEXUS', 'объект локализован · санузлы эт. ' + sc.f + ' · точность ' + rnd(1.1, 1.8).toFixed(1) + ' м', 'good', 'incident');
+          sc.team.forEach(function (g) { send(g, sc.f, { x: sc.obj.x + rnd(-.02, .02), y: sc.obj.y - .04 }); });
+        }
+      } else if (sc.st === 'found') {
+        var near = sc.team.filter(function (g) { return g.floor === sc.f && dist(g, sc.obj) < .07; }).length;
+        if (near >= 1 && sc.k > 2) {
+          event('ГР', 'объект задержан · эт. ' + sc.f + ' · личность установлена: курьер, без пропуска', 'good', 'incident');
+          event('NEXUS', 'инцидент #' + pad(sc.n, 3) + ' закрыт · время реакции ' + mmss(now - sc.start), 'good', 'incident');
+          sc.st = 'escort'; sc.k = 0;
+          var obj = sc.obj, lead = sc.team[0];
+          obj.role = 'visitor'; obj.pass = 'без пропуска'; obj.pause = 0;
+          send(obj, 1, ENTRY, function (a) { A.splice(A.indexOf(a), 1); });
+          sc.team.forEach(function (g) { send(g, 1, roomPoint('tech'), function (h) { h.busy = false; h.think = g === POSTG ? POSTG.think : idleGuardThink; }); });
+          if (lead) lead.v = obj.v;
+        }
+      } else if (sc.st === 'escort') {
+        if (sc.k > 6) { sc.st = 'idle'; sc.t = rnd(150, 220); sc.obj = null; GUARDS.forEach(function (g) { g.v = SPD.guard; }); POSTG.v = SPD.post; }
+      }
+    }
+
+    function simulate(now, dt) {
+      simSec += dt * SPEED;
+      roundsTick(); cleaningTick(); inspectTick(); bleTick(); tenantsTick(); ticketTick(dt); visitorTick(dt); incidentTick(now, dt);
+      for (var i = A.length - 1; i >= 0; i--) { var o = A[i]; if (o.floor > 0 && !o.away && !o.offsite) stepAgent(o, dt); }
+      camsTick();
+      if (rnow() > view.until) {
+        view.pri = 0;
+        if (curRound && curRound.g.floor > 0) focusFloor(curRound.g.lift > 0 ? curRound.g.dest.f : curRound.g.floor, .5, 8);
+        else focusFloor(1, .1, 6);
+      }
+    }
+    function onFloor(f) { return A.filter(function (o) { return o.floor === f && o.lift <= 0 && !o.away && !o.offsite; }); }
+    function inBuilding() { return A.filter(function (o) { return o.floor > 0 && !o.away && !o.offsite; }).length; }
+
+    // initial journal lines
+    pushLog('NEXUS', 'БЦ · 8 этажей · камеры 96 / 96 · Wi-Fi 40 · BLE-маяков 160', '');
+    pushLog('NEXUS', 'смена охраны: ' + GUARDS.map(function (g) { return short(g.name); }).join(', ') + ' · пост: ' + short(POSTG.name), '');
+
+    // ===== NEXUS panel: opens only on click; the page content shifts left to make room
+    var drawer = document.getElementById('drawer'), tab = document.getElementById('drawerTab'), firstAlarm = false, pendingBeep = false, everOpened = false;
+    var hint = document.getElementById('tabHint'), teaser = document.getElementById('siTeaser'), tabAlertTxt = document.getElementById('tabAlertTxt');
+    var navEl = document.getElementById('nav');
+    function placeDrawer() { var b = navEl.getBoundingClientRect().bottom; drawer.style.top = Math.max(8, b + 12) + 'px'; }
+    placeDrawer(); addEventListener('scroll', placeDrawer, { passive: true }); addEventListener('resize', placeDrawer);
+    function setOpen(v) {
+      drawer.classList.toggle('open', v); document.body.classList.toggle('si-open', v);
+      tab.setAttribute('aria-expanded', v ? 'true' : 'false'); tab.setAttribute('aria-label', v ? 'Свернуть NEXUS' : 'Открыть NEXUS — ситуационный центр');
+      if (v) { everOpened = true; hint.classList.remove('show'); }
+      setTimeout(function () { H = fit(beam); }, 950);
+    }
+    tab.addEventListener('click', function () { setOpen(!drawer.classList.contains('open')); });
+    teaser.addEventListener('click', function () { setOpen(true); });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && repModal.hidden) setOpen(false); });
+    // invitation bubble next to the tab until the visitor opens NEXUS once
+    (function cycle() {
+      setTimeout(function () {
+        if (everOpened) return;
+        hint.classList.add('show');
+        setTimeout(function () { hint.classList.remove('show'); cycle(); }, 4200);
+      }, 2600);
+    })();
+    var warnUntil = 0;
+    function tabFlash(kind, txt) {
+      if (kind === 'warn') { warnUntil = rnow() + 4.5; tabAlertTxt.textContent = txt || 'NEXUS · отклонение от графика'; }
+      teaser.classList.add(kind === 'warn' ? 'flash-warn' : 'flash-alarm');
+      setTimeout(function () { teaser.classList.remove('flash-warn'); }, 4500);
+    }
+    var actx = null;
+    function audio() { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; } return actx; }
+    function playBeep(c) {
+      var t0b = c.currentTime + .03;
+      [0, .19].forEach(function (o) {
+        var osc = c.createOscillator(), g = c.createGain();
+        osc.type = 'square'; osc.frequency.value = 2600;
+        g.gain.setValueAtTime(0, t0b + o); g.gain.linearRampToValueAtTime(.06, t0b + o + .008);
+        g.gain.setValueAtTime(.06, t0b + o + .11); g.gain.linearRampToValueAtTime(0, t0b + o + .125);
+        osc.connect(g); g.connect(c.destination); osc.start(t0b + o); osc.stop(t0b + o + .14);
+      });
+    }
+    function beep() {
+      var c = audio(); if (!c) return;
+      if (c.state === 'running') { playBeep(c); return; }
+      pendingBeep = true;                                  // browsers allow sound only after a click or key press
+      c.resume().then(function () { if (pendingBeep && c.state === 'running') { pendingBeep = false; playBeep(c); } }, function () {});
+    }
+    function unlock() {
+      var c = audio(); if (!c) return;
+      c.resume().then(function () { if (pendingBeep && tab.classList.contains('alarm')) { pendingBeep = false; playBeep(c); } }, function () {});
+    }
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { addEventListener(ev, unlock, { passive: true }); });
+    function alarmTick() {
+      var on = sc.st === 'alert' || sc.st === 'lost' || sc.st === 'found', w = !on && rnow() < warnUntil;
+      if (on) tabAlertTxt.textContent = 'NEXUS · нештатная ситуация';
+      tab.classList.toggle('alarm', on); tab.classList.toggle('warn', w);
+      teaser.classList.toggle('flash-alarm', on);
+      if (on && !firstAlarm) { firstAlarm = true; beep(); }
+      if (!on) pendingBeep = false;
+    }
+
+    function F(px, w) { return (w || '') + ' ' + (px * U).toFixed(1) + 'px "JetBrains Mono", monospace'; }
+    function drawSim(now, W, Hh) {
+      var f = view.f, t = now / 1000, PX = 6 * U, PT = 30 * U, PB = 24 * U, pw = W - 2 * PX, ph = Hh - PT - PB;
+      var X = function (x) { return PX + x * pw; }, Y = function (y) { return PT + y * ph; };
+      // blind area (no cameras in toilets)
+      BLINDR.forEach(function (r) {
+        vx.save(); vx.beginPath(); vx.rect(X(r.x1), Y(r.y1), (r.x2 - r.x1) * pw, (r.y2 - r.y1) * ph); vx.clip();
+        vx.strokeStyle = 'rgba(140,151,173,.12)'; vx.lineWidth = 1;
+        for (var h = -Hh; h < W; h += 8 * U) { vx.beginPath(); vx.moveTo(h, Y(r.y2)); vx.lineTo(h + Hh, Y(r.y1)); vx.stroke(); }
+        vx.restore();
+        vx.fillStyle = 'rgba(140,151,173,.5)'; vx.font = F(7); vx.fillText('нет видео', X(r.x1) + 4, Y(r.y2) - 6);
+      });
+      // lift cars and stairs
+      vx.strokeStyle = 'rgba(165,190,240,.35)'; vx.lineWidth = 1;
+      [[.27, .88], [.33, .88]].forEach(function (p) { vx.strokeRect(X(p[0]), Y(p[1]), .045 * pw, .09 * ph); vx.beginPath(); vx.moveTo(X(p[0] + .0225), Y(p[1])); vx.lineTo(X(p[0] + .0225), Y(p[1] + .09)); vx.stroke(); });
+      for (var st = 0; st < 6; st++) { vx.beginPath(); vx.moveTo(X(.395), Y(.66 + st * .045)); vx.lineTo(X(.435), Y(.66 + st * .045)); vx.stroke(); }
+      // floor 1: entrance, turnstiles, guard post
+      if (f === 1) {
+        vx.fillStyle = 'rgba(126,226,176,.7)';
+        for (var ts = 0; ts < 4; ts++) vx.fillRect(X(.035 + ts * .045), Y(.86), 3 * U, 7 * U);
+        vx.strokeStyle = 'rgba(126,226,176,.45)'; vx.strokeRect(X(.15), Y(.68), .07 * pw, .04 * ph);
+        vx.fillStyle = 'rgba(126,226,176,.75)'; vx.font = F(7); vx.fillText('турникеты', X(.035), Y(.85) - 3); vx.fillText('пост', X(.15), Y(.68) - 3);
+        vx.fillStyle = 'rgba(102,227,255,.8)'; vx.fillText('▲ вход', X(.075), Y(.995) - 2);
+      }
+      // room labels (+ tenants on office floors)
+      vx.textAlign = 'center';
+      RM.forEach(function (r) {
+        if (r.k === 'cor') return;
+        var cx = X((r.x1 + r.x2) / 2), cy = Y(r.y1 < .5 ? r.y1 + .07 : r.y1 + .08);
+        vx.font = F(8); vx.fillStyle = 'rgba(165,180,205,.55)'; vx.fillText(roomLabel(r, f), cx, cy);
+        if (r.t === 'office' && COMPANIES[f]) { vx.font = F(7); vx.fillStyle = 'rgba(102,227,255,.4)'; vx.fillText(COMPANIES[f][(r.k === 'o4' || r.k === 'o5') ? 1 : 0], cx, cy + 11 * U); }
+      });
+      vx.textAlign = 'left';
+      // walls & doors
+      vx.strokeStyle = 'rgba(165,190,240,.62)'; vx.lineCap = 'square';
+      WALLS.forEach(function (w) {
+        var outer = (w[0] === 0 && w[2] === 0) || (w[0] === 1 && w[2] === 1) || (w[1] === 0 && w[3] === 0) || (w[1] === 1 && w[3] === 1);
+        vx.lineWidth = outer ? 3 : 1.8;
+        vx.beginPath(); vx.moveTo(X(w[0]), Y(w[1])); vx.lineTo(X(w[2]), Y(w[3])); vx.stroke();
+      });
+      if (f !== 1) { vx.lineWidth = 3; vx.beginPath(); vx.moveTo(X(.06), Y(1)); vx.lineTo(X(.14), Y(1)); vx.stroke(); }
+      vx.lineCap = 'butt'; vx.strokeStyle = 'rgba(102,227,255,.3)'; vx.lineWidth = 1;
+      DOORS.forEach(function (d) {
+        var x1 = X(d[0]), y1 = Y(d[1]), x2 = X(d[2]), y2 = Y(d[3]), L = Math.hypot(x2 - x1, y2 - y1);
+        if (L > 34 * U || d[1] >= 1) return;
+        vx.beginPath();
+        if (y1 === y2) { vx.moveTo(x1, y1); vx.arc(x1, y1, Math.max(0, L), 0, d[1] < .5 ? Math.PI / 2 : -Math.PI / 2, d[1] >= .5); }
+        else { vx.moveTo(x1, y1); vx.arc(x1, y1, Math.max(0, L), Math.PI / 2, d[0] < .5 ? 0 : Math.PI, d[0] >= .5); }
+        vx.stroke();
+      });
+      // camera coverage
+      CAMS.forEach(function (c) {
+        var r = RMK[c.room], cx = X(c.x), cy = Y(c.y), aim = camAim(c), half = c.fov * Math.PI / 360;
+        vx.save(); vx.beginPath(); vx.rect(X(r.x1), Y(r.y1), (r.x2 - r.x1) * pw, (r.y2 - r.y1) * ph); vx.clip();
+        vx.beginPath(); vx.moveTo(cx, cy); vx.arc(cx, cy, Math.max(0, c.r * pw), aim - half, aim + half); vx.closePath();
+        vx.fillStyle = 'rgba(102,227,255,.045)'; vx.fill(); vx.strokeStyle = 'rgba(102,227,255,.13)'; vx.lineWidth = 1; vx.stroke();
+        vx.restore();
+        vx.save(); vx.translate(cx, cy); vx.rotate(aim); vx.fillStyle = 'rgba(102,227,255,.75)';
+        vx.beginPath(); vx.moveTo(6 * U, 0); vx.lineTo(-3 * U, -3.5 * U); vx.lineTo(-3 * U, 3.5 * U); vx.closePath(); vx.fill(); vx.restore();
+      });
+      // guard checkpoint of this floor
+      var hNow = Math.floor(simMin() / 60), R = ROUNDS[hNow], ok = R && R.visited.indexOf(f) >= 0;
+      vx.strokeStyle = ok ? '#7EE2B0' : 'rgba(140,151,173,.7)'; vx.lineWidth = 1.4;
+      vx.strokeRect(X(KP.x) - 6 * U, Y(KP.y) - 6 * U, 12 * U, 12 * U);
+      vx.fillStyle = ok ? '#7EE2B0' : 'rgba(140,151,173,.8)'; vx.font = F(7, '500');
+      vx.fillText('КП ' + f + (ok ? ' ✓' : ''), X(KP.x) + 9 * U, Y(KP.y) + 3 * U);
+      // alternative sources during camera loss
+      var lostHere = sc.st === 'lost' && sc.f === f;
+      APS.forEach(function (a) {
+        var x = X(a.x), y = Y(a.y);
+        vx.strokeStyle = 'rgba(143,123,255,.4)'; vx.lineWidth = 1;
+        vx.beginPath(); vx.moveTo(x, y - 3 * U); vx.lineTo(x + 3 * U, y); vx.lineTo(x, y + 3 * U); vx.lineTo(x - 3 * U, y); vx.closePath(); vx.stroke();
+        if (lostHere) for (var r = 0; r < 2; r++) { var ph = ((t * .35 + r * .5 + a.x) % 1); vx.strokeStyle = 'rgba(143,123,255,' + (.35 * (1 - ph)).toFixed(3) + ')'; vx.beginPath(); vx.arc(x, y, Math.max(0, 4 + ph * Math.min(W, Hh) * .45), 0, Math.PI * 2); vx.stroke(); }
+      });
+      // people on this floor
+      onFloor(f).forEach(function (o) {
+        var x = X(o.x), y = Y(o.y), c = ROLE[o.role].c;
+        if (o.role === 'intruder') {
+          if (lostHere) {
+            var pr = Math.min(1, Math.max(0, (sc.k - 1.5) / 12)), Rr = (1 - pr) * Math.min(pw, ph) * .4 + 10 * U;
+            var ex = x + (1 - pr) * 16 * Math.sin(t * 2.3), ey = y + (1 - pr) * 12 * Math.cos(t * 1.9);
+            vx.setLineDash([3, 3]); vx.strokeStyle = 'rgba(143,123,255,.85)'; vx.lineWidth = 1.2; vx.beginPath(); vx.arc(ex, ey, Rr, 0, Math.PI * 2); vx.stroke(); vx.setLineDash([]);
+            vx.fillStyle = 'rgba(185,174,255,.95)'; vx.font = F(8, '500'); vx.fillText('Wi-Fi · BLE · аудио · ±' + (Rr / Math.min(W, Hh) * 12).toFixed(1) + ' м', Math.min(W - 170 * U, ex + 6), Math.max(12, ey - Rr - 4));
+            return;
+          }
+          var pu = (t * .8) % 1;
+          vx.strokeStyle = 'rgba(255,77,94,' + (.8 * (1 - pu)).toFixed(3) + ')'; vx.lineWidth = 1.2; vx.beginPath(); vx.arc(x, y, 4 * U + pu * 16 * U, 0, Math.PI * 2); vx.stroke();
+          if (o.seen) { vx.fillStyle = 'rgba(255,77,94,.25)'; vx.beginPath(); vx.arc(x, y, 9 * U, 0, Math.PI * 2); vx.fill(); }
+          vx.fillStyle = c; vx.beginPath(); vx.arc(x, y, 3.4 * U, 0, Math.PI * 2); vx.fill();
+          vx.font = F(8, '500'); vx.fillText(sc.st === 'found' ? 'ЛОКАЛИЗОВАН' : 'БЕЗ ID', x + 7 * U, y - 6 * U);
+          return;
+        }
+        var staff = o.role !== 'tenant' && o.role !== 'visitor';
+        if (o.seen) { vx.fillStyle = 'rgba(233,238,248,.16)'; vx.beginPath(); vx.arc(x, y, 7.5 * U, 0, Math.PI * 2); vx.fill(); }
+        vx.globalAlpha = o.seen ? 1 : .45;
+        if (staff && o.tag) { vx.strokeStyle = c; vx.globalAlpha = .35; vx.lineWidth = 1; vx.beginPath(); vx.arc(x, y, 5.5 * U, 0, Math.PI * 2); vx.stroke(); vx.globalAlpha = 1; }
+        if (staff && !o.tag) { vx.setLineDash([2, 2]); vx.strokeStyle = '#FFC857'; vx.lineWidth = 1.2; vx.beginPath(); vx.arc(x, y, 6.5 * U, 0, Math.PI * 2); vx.stroke(); vx.setLineDash([]); }
+        if (o.role === 'post') { vx.fillStyle = c; vx.fillRect(x - 3 * U, y - 3 * U, 6 * U, 6 * U); }
+        else { vx.fillStyle = c; vx.beginPath(); vx.arc(x, y, (staff ? 3 : 2.5) * U, 0, Math.PI * 2); vx.fill(); }
+        vx.globalAlpha = 1;
+        if (staff) { vx.font = F(7); vx.fillStyle = c; vx.globalAlpha = .85; vx.fillText(short(o.name) + (o.tag ? '' : ' · без метки'), x + 7 * U, y - 4 * U); vx.globalAlpha = 1; }
+        else if (o.role === 'visitor') { vx.font = F(7); vx.fillStyle = c; vx.globalAlpha = .85; vx.fillText(o.pass + (o.wrong ? ' ⚠' : ''), x + 6 * U, y - 4 * U); vx.globalAlpha = 1; }
+      });
+      // floor title
+      vx.font = F(13, '700'); vx.fillStyle = '#E9EEF8'; vx.fillText('ЭТАЖ ' + f, PX + 4 * U, 21 * U);
+      if (COMPANIES[f]) { var tw0 = vx.measureText('ЭТАЖ ' + f).width; vx.font = F(8); vx.fillStyle = 'rgba(102,227,255,.6)'; vx.fillText('арендаторы: ' + COMPANIES[f].join(', '), PX + tw0 + 14 * U, 20 * U); }
+      else { var tw1 = vx.measureText('ЭТАЖ 1').width; vx.font = F(8); vx.fillStyle = 'rgba(126,226,176,.7)'; vx.fillText('вход · СКУД · пост охраны', PX + tw1 + 14 * U, 20 * U); }
+      // floor selector strip (top right): incidents red, deviations amber
+      var bs = 16 * U, gap = 3 * U, sx0 = W - (bs + gap) * FLOORS - 4 * U, sy0 = 7 * U, nr = rnow();
+      for (var i = 1; i <= FLOORS; i++) {
+        var bx0 = sx0 + (i - 1) * (bs + gap), fl = floorFlags[i], fk = fl && fl.until > nr ? fl.kind : null;
+        vx.fillStyle = fk === 'alert' ? (Math.floor(t * 2) % 2 ? 'rgba(255,77,94,.85)' : 'rgba(120,20,30,.85)') : fk === 'warn' ? 'rgba(255,200,87,.55)' : 'rgba(20,30,52,.9)';
+        vx.fillRect(bx0, sy0, bs, bs);
+        vx.strokeStyle = i === f ? '#66E3FF' : 'rgba(140,170,255,.3)'; vx.lineWidth = i === f ? 1.6 : 1; vx.strokeRect(bx0, sy0, bs, bs);
+        vx.fillStyle = i === f ? '#E9EEF8' : 'rgba(200,210,230,.8)'; vx.font = F(8, '500'); vx.textAlign = 'center'; vx.fillText(String(i), bx0 + bs / 2, sy0 + bs - 4 * U); vx.textAlign = 'left';
+      }
+      // incident banner
+      if (sc.f === f && (sc.st === 'alert' || sc.st === 'lost' || sc.st === 'found')) {
+        var txt = sc.st === 'alert' ? 'ТРЕВОГА · ИНЦИДЕНТ #' + pad(sc.n, 3) + ' · ОБЪЕКТ БЕЗ ID' : sc.st === 'lost' ? 'ВИДЕО НЕДОСТУПНО · АЛЬТЕРНАТИВНЫЕ ИСТОЧНИКИ' : 'ОБЪЕКТ ЛОКАЛИЗОВАН · ГР НА ПОДХОДЕ';
+        vx.font = F(9, '500');
+        var tw = vx.measureText(txt).width + 16, bxp = (W - tw) / 2, blink = sc.st === 'alert' ? (Math.floor(t * 1.2) % 2 ? 1 : .6) : 1;
+        vx.fillStyle = sc.st === 'found' ? 'rgba(20,60,45,.92)' : sc.st === 'lost' ? 'rgba(40,30,80,.92)' : 'rgba(80,14,24,' + (.92 * blink).toFixed(2) + ')';
+        vx.fillRect(bxp, PT + 6 * U, tw, 15 * U);
+        vx.fillStyle = sc.st === 'found' ? '#7EE2B0' : sc.st === 'lost' ? '#B9AEFF' : '#FF8A95';
+        vx.fillText(txt, bxp + 8, PT + 17 * U);
+      }
+      // floor change flash
+      var ch = nr - view.changedAt;
+      if (ch < 1.6 && view.changedAt) { vx.fillStyle = 'rgba(102,227,255,' + (.12 * (1 - ch / 1.6)).toFixed(3) + ')'; vx.fillRect(0, 0, W, Hh); }
+    }
+
+    // ===== hero teaser: live mini-map of the floor on screen
+    var tzMap = document.getElementById('tzMap'), tz = tzMap.getContext('2d'), TZ = fit(tzMap);
+    addEventListener('resize', function () { TZ = fit(tzMap); });
+    var tzIn = document.getElementById('tzIn'), tzFl = document.getElementById('tzFl'), tzDev = document.getElementById('tzDev'), tzTime = document.getElementById('tzTime');
+    function drawMini(now) {
+      var W2 = TZ.width, H2 = TZ.height, p = 6, pw2 = W2 - 2 * p, ph2 = H2 - 2 * p, f = view.f;
+      var X2 = function (x) { return p + x * pw2; }, Y2 = function (y) { return p + y * ph2; };
+      tz.fillStyle = '#03050A'; tz.fillRect(0, 0, W2, H2);
+      tz.strokeStyle = 'rgba(165,190,240,.5)'; tz.lineWidth = 1.2;
+      WALLS.forEach(function (w) { tz.beginPath(); tz.moveTo(X2(w[0]), Y2(w[1])); tz.lineTo(X2(w[2]), Y2(w[3])); tz.stroke(); });
+      onFloor(f).forEach(function (o) {
+        tz.globalAlpha = o.seen ? 1 : .5; tz.fillStyle = ROLE[o.role].c;
+        tz.beginPath(); tz.arc(X2(o.x), Y2(o.y), o.role === 'intruder' ? 3.2 : 2.2, 0, Math.PI * 2); tz.fill();
+      });
+      tz.globalAlpha = 1;
+      tz.font = '700 11px "Unbounded", sans-serif'; tz.fillStyle = '#E9EEF8'; tz.fillText('ЭТАЖ ' + f, p + 6, p + 16);
+      if (sc.st !== 'idle' && sc.st !== 'escort' && sc.f === f) { tz.strokeStyle = 'rgba(255,77,94,' + (Math.floor(now / 400) % 2 ? .9 : .3) + ')'; tz.lineWidth = 2; tz.strokeRect(1, 1, W2 - 2, H2 - 2); }
+    }
+
+    // ===== AltGeo: positioning without GPS (card animation + modal)
+    var altMini = document.getElementById('altMini'), altBig = document.getElementById('altBig'), altModal = document.getElementById('altModal');
+    var AM = fit(altMini), AB = null, altVisible = true;
+    addEventListener('resize', function () { AM = fit(altMini); if (!altModal.hidden) AB = fit(altBig); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { altVisible = es[0].isIntersecting; }).observe(altMini);
+    function hsh(i) { var x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); }
+    function drawAlt(ctx, W, Hh, t, big) {
+      var k = big ? 1.25 : 1;
+      ctx.fillStyle = '#03050A'; ctx.fillRect(0, 0, W, Hh);
+      ctx.strokeStyle = 'rgba(140,170,255,.07)'; ctx.lineWidth = 1;
+      for (var gx = 0; gx < W; gx += 26) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, Hh); ctx.stroke(); }
+      for (var gy = 0; gy < Hh; gy += 26) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+      function P(u) { return { x: (.06 + .88 * u) * W, y: (.58 + .2 * Math.sin(u * Math.PI * 2.1)) * Hh }; }
+      var Z1 = .36, Z2 = .66, zx1 = P(Z1).x, zx2 = P(Z2).x;
+      ctx.save(); ctx.beginPath(); ctx.rect(zx1, 0, zx2 - zx1, Hh); ctx.clip();
+      ctx.fillStyle = 'rgba(40,30,80,.35)'; ctx.fillRect(zx1, 0, zx2 - zx1, Hh);
+      ctx.strokeStyle = 'rgba(143,123,255,.14)'; for (var h = -Hh; h < W; h += 9) { ctx.beginPath(); ctx.moveTo(h, Hh); ctx.lineTo(h + Hh, 0); ctx.stroke(); }
+      ctx.restore();
+      ctx.font = '500 ' + (10 * k) + 'px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(185,174,255,.85)'; ctx.textAlign = 'center';
+      ctx.fillText('ТОННЕЛЬ · ПАРКОВКА · НЕТ GPS', (zx1 + zx2) / 2, 18 * k); ctx.textAlign = 'left';
+      // route
+      ctx.strokeStyle = 'rgba(140,170,255,.18)'; ctx.lineWidth = 8 * k; ctx.lineCap = 'round'; ctx.beginPath();
+      for (var u = 0; u <= 1.0001; u += .01) { var q = P(u); if (u === 0) ctx.moveTo(q.x, q.y); else ctx.lineTo(q.x, q.y); } ctx.stroke(); ctx.lineCap = 'butt';
+      var s0 = (t / 13) % 1, inZone = s0 > Z1 && s0 < Z2;
+      // raw GPS fixes: noisy outside, missing or wild jumps inside the zone
+      var N = 90, last = null;
+      for (var i = 0; i <= N * s0; i++) {
+        var uu = i / N, p0 = P(uu), z = uu > Z1 && uu < Z2;
+        if (z && hsh(i) > .12) continue;
+        var amp = z ? 70 : 7, gxp = p0.x + (hsh(i + 3) - .5) * 2 * amp * k, gyp = p0.y + (hsh(i + 7) - .5) * 2 * amp * k;
+        ctx.strokeStyle = 'rgba(255,77,94,' + (z ? .9 : .55) + ')'; ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.moveTo(gxp - 3, gyp - 3); ctx.lineTo(gxp + 3, gyp + 3); ctx.moveTo(gxp + 3, gyp - 3); ctx.lineTo(gxp - 3, gyp + 3); ctx.stroke();
+        if (!z) last = p0;
+      }
+      // AltGeo fused track
+      ctx.lineWidth = 2.2 * k;
+      for (var j = 1; j <= Math.floor(s0 * 200); j++) {
+        var ua = (j - 1) / 200, ub = j / 200, a1 = P(ua), b1 = P(ub), zz = ub > Z1 && ub < Z2;
+        ctx.strokeStyle = zz ? '#B9AEFF' : '#66E3FF'; ctx.setLineDash(zz ? [5, 4] : []);
+        ctx.beginPath(); ctx.moveTo(a1.x, a1.y); ctx.lineTo(b1.x, b1.y); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      var pc = P(s0);
+      ctx.fillStyle = 'rgba(102,227,255,.25)'; ctx.beginPath(); ctx.arc(pc.x, pc.y, (inZone ? 13 : 9) * k, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#66E3FF'; ctx.beginPath(); ctx.arc(pc.x, pc.y, 4 * k, 0, Math.PI * 2); ctx.fill();
+      if (inZone && last) { ctx.fillStyle = 'rgba(255,77,94,.9)'; ctx.font = (9 * k) + 'px "JetBrains Mono", monospace'; ctx.fillText('последняя точка GPS', last.x - 40 * k, last.y + 26 * k); }
+      // readout
+      ctx.font = '500 ' + (10 * k) + 'px "JetBrains Mono", monospace';
+      ctx.fillStyle = inZone ? '#FF6B78' : 'rgba(233,238,248,.8)'; ctx.fillText('GPS: ' + (inZone ? 'нет сигнала' : 'ок · ±' + (6 + Math.round(hsh(Math.floor(t * 2)) * 9)) + ' м'), 10, Hh - 26 * k);
+      ctx.fillStyle = inZone ? '#B9AEFF' : '#66E3FF'; ctx.fillText('AltGeo: ±' + (inZone ? (1.6 + hsh(Math.floor(t)) * .9).toFixed(1) : (1.1 + hsh(Math.floor(t)) * .5).toFixed(1)) + ' м' + (inZone ? ' · Wi-Fi + BLE + IMU' : ''), 10, Hh - 10 * k);
+    }
+    function altLoop(now) {
+      var t = now / 1000;
+      if (altVisible) drawAlt(altMini.getContext('2d'), AM.width, AM.height, t, false);
+      if (!altModal.hidden && AB) drawAlt(altBig.getContext('2d'), AB.width, AB.height, t, true);
+      requestAnimationFrame(altLoop);
+    }
+    requestAnimationFrame(altLoop);
+    document.getElementById('altOpen').addEventListener('click', function () { altModal.hidden = false; AB = fit(altBig); document.getElementById('altClose').focus(); });
+    function altClose() { altModal.hidden = true; }
+    document.getElementById('altClose').addEventListener('click', altClose);
+    altModal.addEventListener('click', function (e) { if (e.target === altModal) altClose(); });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && !altModal.hidden) altClose(); });
+
+    // ===== control-panel keys: light up the key of the section on screen
+    (function () {
+      var keys = [].slice.call(document.querySelectorAll('nav.menu a'));
+      function spy() {
+        var best = null, y = innerHeight * .35;
+        keys.forEach(function (k) { var el = document.querySelector(k.getAttribute('href')); if (!el) return; var r = el.getBoundingClientRect(); if (r.top <= y && r.bottom > y) best = k; });
+        keys.forEach(function (k) { k.classList.toggle('on', k === best); });
+      }
+      addEventListener('scroll', spy, { passive: true }); spy();
+    })();
+
+    // ===== report window
+    var repModal = document.getElementById('repModal'), repBody = document.getElementById('repBody'), repPeriod = document.getElementById('repPeriod');
+    var lastReportText = '';
+    function esc2(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+    function buildReport() {
+      var m1 = simMin(), m0 = Math.max(9 * 60 + 50, m1 - 180), rows = REP.filter(function (e) { return e.m >= m0; });
+      var txt = ['ОТЧЁТ NEXUS · БЦ, 8 этажей', 'Период: ' + hhmm(m0) + ' – ' + hhmm(m1), ''];
+      var html = '';
+      var warn = rows.filter(function (e) { return e.lvl === 'warn'; }), inc = rows.filter(function (e) { return e.cat === 'incident' && (e.lvl === 'alert' || e.lvl === 'good'); });
+      var ble = rows.filter(function (e) { return e.cat === 'ble'; }), vis = rows.filter(function (e) { return e.cat === 'visitor' && e.lvl !== 'warn'; }), srv = rows.filter(function (e) { return e.cat === 'service' && e.lvl !== 'warn'; });
+      html += '<div class="rep-kpi"><div><b>' + Object.keys(ROUNDS).length + '</b><span>обходов</span></div><div><b class="w">' + warn.length + '</b><span>отклонений</span></div><div><b class="a">' + STAT.inc + '</b><span>инцидентов</span></div><div><b>' + vis.filter(function (e) { return /пропуск G-/.test(e.text) && /гостевой/.test(e.text); }).length + '</b><span>пропусков</span></div></div>';
+      // patrols table
+      html += '<h4>Обходы охраны</h4><table><tr><th>Час</th><th>Охранник</th><th>Статус</th></tr>';
+      txt.push('ОБХОДЫ ОХРАНЫ');
+      Object.keys(ROUNDS).sort().forEach(function (h) {
+        var R = ROUNDS[h], st = R.done ? R.status : R.started ? 'в процессе · ' + R.visited.length + ' / ' + (8 - R.skip.length) + ' КП' : (R.lateLogged ? 'не начат · опоздание' : 'ожидается');
+        var cls = /не /.test(st) || /опоздан/.test(st) ? 'w' : R.done ? 'g' : '';
+        html += '<tr><td>' + hhmm(h * 60) + '</td><td>' + esc2(R.g.name) + '</td><td class="' + cls + '">' + esc2(st) + '</td></tr>';
+        txt.push('  ' + hhmm(h * 60) + '  ' + R.g.name + '  —  ' + st);
+      });
+      html += '</table>';
+      function section(title, list, cls) {
+        txt.push(''); txt.push(title.toUpperCase());
+        html += '<h4>' + title + '</h4>';
+        if (!list.length) { html += '<p class="rep-empty">Нет событий за период</p>'; txt.push('  —'); return; }
+        html += '<ul>' + list.slice(-14).map(function (e) { txt.push('  ' + hhmm(e.m) + '  ' + e.text); return '<li class="' + (cls || e.lvl) + '"><time>' + hhmm(e.m) + '</time>' + esc2(e.text) + '</li>'; }).join('') + '</ul>';
+      }
+      section('Отклонения от графика', warn, 'warn');
+      section('Инциденты', inc);
+      section('Идентификация без BLE-метки', ble);
+      section('Заявки и обслуживание', srv, '');
+      section('Посетители', vis, '');
+      repPeriod.textContent = 'Период ' + hhmm(m0) + ' – ' + hhmm(m1) + ' · сформирован ' + clockStr().slice(0, 5);
+      repBody.innerHTML = html; lastReportText = txt.join('\n');
+    }
+    function openReport() { buildReport(); repModal.hidden = false; document.getElementById('repClose').focus(); }
+    function closeReport() { repModal.hidden = true; }
+    document.getElementById('repBtn').addEventListener('click', openReport);
+    document.getElementById('repClose').addEventListener('click', closeReport);
+    document.getElementById('repClose2').addEventListener('click', closeReport);
+    repModal.addEventListener('click', function (e) { if (e.target === repModal) closeReport(); });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && !repModal.hidden) closeReport(); });
+    document.getElementById('repDl').addEventListener('click', function () {
+      var b = new Blob([lastReportText], { type: 'text/plain;charset=utf-8' }), u = URL.createObjectURL(b), a = document.createElement('a');
+      a.href = u; a.download = 'nexus-report-' + clockStr().slice(0, 5).replace(':', '') + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 1000);
+    });
+
+    var rates = []; for (var i = 0; i < 40; i++) rates.push(rnd(38, 52));
+    var t0 = performance.now(), lastT = t0;
+
+    function frame(now) {
+      var t = (now - t0) / 1000, dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+      simulate(now, dt); alarmTick();
+      var hr = hero.getBoundingClientRect();
+      var copy = document.querySelector('.hero-copy').getBoundingClientRect();
+      var idle = now - lastMove;
+      var active = !!mouse && (isMouse || idle < 2600);
+      // focus: pointer has rested for 1 s
+      var resting = active && isMouse && idle > 1000;
+      // envelope: rise 0.3 s, hold 0.5 s, fade out over 2 s
+      var env = 0;
+      if (resting) { var e = idle - 1000; env = e < 300 ? e / 300 : e < 800 ? 1 : Math.max(0, 1 - (e - 800) / 2000); env = env * env * (3 - 2 * env); }
+      focus += (env - focus) * (resting ? .25 : .35);
+      if (resting && !lockLogged) { lockLogged = true; lockAt = now; }
+      if (!resting && lockLogged) lockLogged = false;
+      var want;
+      if (active) want = { x: mouse.x, y: mouse.y };
+      else {
+        // patrol over the text area
+        want = { x: copy.left + copy.width * (.5 + .38 * Math.sin(t * .45)), y: copy.top + copy.height * (.5 + .36 * Math.sin(t * .71 + 1)) };
+      }
+      tracking = active;
+      if (!tgt) tgt = { x: want.x, y: want.y };
+      var k = active ? .16 : .05;
+      tgt.x += (want.x - tgt.x) * k; tgt.y += (want.y - tgt.y) * k;
+
+      // camera kinematics: pan (drum axis) + tilt (head axis), driven by servo dynamics
+      var pv = center(pivotPt);
+      var dx = tgt.x - pv.x, dy = tgt.y - pv.y;
+      var rel = Math.atan2(-dy, -dx) * 180 / Math.PI;   // rotation that points the lens (facing left) at the target
+      while (rel < -180) rel += 360; while (rel > 180) rel -= 360;
+      var sdt = Math.max(dt, 1 / 240);
+      for (var sub = 0; sub < 2; sub++) {
+        pan.step(rel * .55, sdt / 2);
+        tilt.step(rel - pan.a, sdt / 2);                 // head compensates whatever the base has not reached yet
+      }
+      panG.setAttribute('transform', 'rotate(' + pan.a.toFixed(2) + ' 100 56)');
+      tiltG.setAttribute('transform', 'rotate(' + tilt.a.toFixed(2) + ' 100 111)');
+      gPan.setAttribute('transform', 'translate(100 56) rotate(' + pan.a.toFixed(2) + ')');
+      gPanP.setAttribute('transform', 'translate(89.8 45.8) rotate(' + (-pan.a * 2.4).toFixed(2) + ')');
+      gTilt.setAttribute('transform', 'translate(100 111) rotate(' + tilt.a.toFixed(2) + ')');
+      gTiltP.setAttribute('transform', 'translate(108.1 102.9) rotate(' + (-tilt.a * 2.35).toFixed(2) + ')');
+      // cable from the mount to the rear of the head, sags with motion
+      var rear = rot(132, 106, 100, 111, tilt.a); rear = rot(rear[0], rear[1], 100, 56, pan.a);
+      var sag = 22 + Math.min(14, Math.abs(pan.v) * .08 + Math.abs(tilt.v) * .04);
+      cable.setAttribute('d', 'M116 36 C' + (150).toFixed(1) + ' ' + (44 + sag).toFixed(1) + ' ' + (rear[0] + 18).toFixed(1) + ' ' + (rear[1] - 10).toFixed(1) + ' ' + rear[0].toFixed(1) + ' ' + rear[1].toFixed(1));
+      var lp = center(lensPt), lx = lp.x, ly = lp.y;
+      var ang = -(pan.a + tilt.a);
+
+      // normalized position within hero -> floor coordinates
+      var nx = Math.max(0, Math.min(1, (tgt.x - hr.left) / hr.width));
+      var ny = Math.max(0, Math.min(1, (tgt.y - hr.top) / hr.height));
+      var mx = nx * FLOOR_W, my = ny * FLOOR_H;
+      if (prevM) { var v = Math.hypot(mx - prevM.x, my - prevM.y) / Math.max(dt, .001); speed += (Math.min(v, 9) - speed) * .08; }
+      prevM = { x: mx, y: my };
+      var z = COLS[Math.min(5, Math.floor(nx * 6))] + '-' + (Math.min(ROWS - 1, Math.floor(ny * ROWS)) + 1);
+      zone = z;
+
+      // ---- beam overlay
+      bx.clearRect(0, 0, H.width, H.height);
+      var ox = hr.left, oy = hr.top;
+      var Lx = lx - ox, Ly = ly - oy, Tx = tgt.x - ox, Ty = tgt.y - oy;
+      var dist = Math.hypot(Tx - Lx, Ty - Ly), dir = Math.atan2(Ty - Ly, Tx - Lx), spread = .085;
+      var len = dist + 60;
+      var g = bx.createLinearGradient(Lx, Ly, Lx + Math.cos(dir) * len, Ly + Math.sin(dir) * len);
+      g.addColorStop(0, 'rgba(102,227,255,.035)'); g.addColorStop(.75, 'rgba(102,227,255,.01)'); g.addColorStop(1, 'rgba(102,227,255,0)');
+      bx.fillStyle = g; bx.beginPath(); bx.moveTo(Lx, Ly);
+      bx.lineTo(Lx + Math.cos(dir - spread) * len, Ly + Math.sin(dir - spread) * len);
+      bx.lineTo(Lx + Math.cos(dir + spread) * len, Ly + Math.sin(dir + spread) * len); bx.closePath(); bx.fill();
+      bx.strokeStyle = 'rgba(255,77,94,.09)'; bx.lineWidth = 1; bx.setLineDash([2, 6]);
+      bx.beginPath(); bx.moveTo(Lx, Ly); bx.lineTo(Tx, Ty); bx.stroke(); bx.setLineDash([]);
+      // laser dot where the camera is aiming (about 1.5 mm)
+      if (Ty > 0 && Ty < hr.height) {
+        var gl = bx.createRadialGradient(Tx, Ty, 0, Tx, Ty, 9);
+        gl.addColorStop(0, 'rgba(255,60,80,.45)'); gl.addColorStop(1, 'rgba(255,60,80,0)');
+        bx.fillStyle = gl; bx.beginPath(); bx.arc(Tx, Ty, 9, 0, Math.PI * 2); bx.fill();
+        bx.fillStyle = '#FF3B52'; bx.beginPath(); bx.arc(Tx, Ty, 2.6, 0, Math.PI * 2); bx.fill();
+      }
+
+      // ---- viewport (camera feed)
+      var W = V.width, Hh = V.height; U = Math.max(1, Math.min(1.9, W / 560)); ASP = (Hh - 54 * U) / (W - 12 * U);
+      vx.fillStyle = '#03050A'; vx.fillRect(0, 0, W, Hh);
+      drawSim(now, W, Hh);
+      var sl = (t * 60) % Hh; vx.fillStyle = 'rgba(102,227,255,.04)'; vx.fillRect(0, sl, W, 2);
+      vx.fillStyle = 'rgba(233,238,248,.85)'; vx.font = F(9);
+      vx.fillText(clockStr() + '  ·  ×' + SPEED, 8 * U, Hh - 8 * U);
+      var here = onFloor(view.f).length, tot = inBuilding(), st2 = 'НА ЭТАЖЕ ' + here + ' · В ЗДАНИИ ' + tot;
+      vx.fillStyle = 'rgba(233,238,248,.7)'; vx.fillText(st2, W - vx.measureText(st2).width - 8 * U, Hh - 8 * U);
+
+      if (!document.body.classList.contains('si-open')) drawMini(now);
+      // telemetry
+      if (Math.floor(t * 4) !== Math.floor((t - dt) * 4)) {
+        tzTime.textContent = clockStr().slice(0, 5); tzIn.textContent = tot; tzFl.textContent = view.f; tzDev.textContent = STAT.dev;
+        tFl.textContent = view.f + ' из ' + FLOORS; tOn.textContent = here; tTot.textContent = tot;
+        var Rc = ROUNDS[Math.floor(simMin() / 60)];
+        tRnd.textContent = Rc ? (Rc.done ? (Rc.skip.length ? 'не завершён' : 'выполнен') : Rc.started ? short(Rc.g.name) + ' · ' + Rc.visited.length + '/' + (8 - Rc.skip.length) : 'ожидается') : '—';
+        tDev.textContent = STAT.dev; tNt.textContent = STAT.noTag;
+        tDev.parentNode.classList.toggle('hot', STAT.dev > 0); tNt.parentNode.classList.toggle('hot', STAT.noTag > 0);
+      }
+
+      // data flow sparkline
+      if (Math.floor(t * 1.5) !== Math.floor((t - dt) * 1.5)) { rates.push(Math.max(30, Math.min(60, rates[rates.length - 1] + rnd(-3, 3)))); rates.shift(); tR.textContent = Math.round(rates[rates.length - 1]) + ' соб/мин'; }
+      sx.clearRect(0, 0, S.width, S.height);
+      sx.strokeStyle = '#66E3FF'; sx.lineWidth = 1.2; sx.beginPath();
+      rates.forEach(function (v, i) { var x = i / (rates.length - 1) * S.width, y = S.height - 2 - (v - 30) / 30 * (S.height - 4); if (i) sx.lineTo(x, y); else sx.moveTo(x, y); });
+      sx.stroke();
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // Documentation: list is loaded from docs/docs.json
+  (function () {
+    var list = document.getElementById('doc-list'), empty = document.getElementById('docs-empty'), filter = document.getElementById('docs-filter');
+    var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+    function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+    function draw(items, cat) {
+      var shown = items.filter(function (d) { return !cat || d.product === cat; });
+      empty.hidden = shown.length > 0;
+      list.innerHTML = shown.map(function (d) {
+        var ext = (d.file.split('.').pop() || '').slice(0, 4);
+        var meta = [d.product, d.version && ('версия ' + d.version), d.date, d.size].filter(Boolean).map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('');
+        var href = 'docs/' + encodeURI(d.file);
+        return '<li class="doc"><div class="doc-ext">' + esc(ext) + '</div><div><h3>' + esc(d.title) + '</h3>' +
+          (d.description ? '<p>' + esc(d.description) + '</p>' : '') + (meta ? '<div class="doc-meta">' + meta + '</div>' : '') +
+          '</div><a class="doc-dl" href="' + href + '" download>' + icon + 'Скачать</a></li>';
+      }).join('');
+    }
+    function init(items) {
+      var cats = items.map(function (d) { return d.product; }).filter(function (c, i, a) { return c && a.indexOf(c) === i; });
+      if (cats.length > 1) {
+        var btns = [['', 'Все']].concat(cats.map(function (c) { return [c, c]; }));
+        filter.innerHTML = btns.map(function (b, i) { return '<button type="button" data-cat="' + esc(b[0]) + '" aria-pressed="' + (i === 0) + '">' + esc(b[1]) + '</button>'; }).join('');
+        filter.addEventListener('click', function (e) {
+          var b = e.target.closest('button'); if (!b) return;
+          filter.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+          draw(items, b.dataset.cat);
+        });
+      }
+      draw(items, '');
+    }
+    fetch('docs/docs.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (items) { init(Array.isArray(items) ? items : []); })
+      .catch(function () { init([]); });
+  })();
+
+  // Terminal: deploy pipelines of our products, a new run every 10 s
+  var RUNS = [
+    { title: 'nexus · core', lines: [
+      ['t-cmd', 'zentra deploy --service nexus-core'],
+      ['t-dim', 'анализ изменений .............. 14 файлов'],
+      ['t-ok', '✓ архитектурные контракты согласованы'],
+      ['t-ok', '✓ статический анализ: 0 замечаний'],
+      ['t-ok', '✓ модульные тесты: 1 284 / 1 284'],
+      ['t-ok', '✓ интеграционные тесты: 212 / 212'],
+      ['t-ok', '✓ проверка безопасности пройдена'],
+      ['t-dim', 'сборка контейнеров ............ готово'],
+      ['t-dim', 'развёртывание на стенд ........ готово'],
+      ['t-hl', '● nexus-core 2.4.1 опубликован · 6 мин 42 с']] },
+    { title: 'altgeo · fusion', lines: [
+      ['t-cmd', 'zentra deploy --service altgeo-fusion'],
+      ['t-dim', 'анализ изменений ............... 9 файлов'],
+      ['t-ok', '✓ модель слияния Wi-Fi · BLE · IMU: 486 / 486'],
+      ['t-ok', '✓ точность без GPS: ±1.6 м (норма ≤ 3 м)'],
+      ['t-ok', '✓ сценарии «тоннель», «парковка»: пройдены'],
+      ['t-ok', '✓ нагрузка: 12 000 объектов / с'],
+      ['t-ok', '✓ проверка безопасности пройдена'],
+      ['t-dim', 'сборка контейнеров ............ готово'],
+      ['t-dim', 'развёртывание на стенд ........ готово'],
+      ['t-hl', '● altgeo-fusion 0.9.4-beta опубликован · 4 мин 18 с']] },
+    { title: 'nexus · video', lines: [
+      ['t-cmd', 'zentra deploy --service nexus-video'],
+      ['t-dim', 'анализ изменений .............. 11 файлов'],
+      ['t-ok', '✓ распознавание лиц: 0.97 на контрольной выборке'],
+      ['t-ok', '✓ идентификация по походке: 0.93'],
+      ['t-ok', '✓ модульные тесты: 742 / 742'],
+      ['t-ok', '✓ 96 камер · задержка кадра 120 мс'],
+      ['t-ok', '✓ проверка безопасности пройдена'],
+      ['t-dim', 'сборка контейнеров ............ готово'],
+      ['t-dim', 'развёртывание на стенд ........ готово'],
+      ['t-hl', '● nexus-video 1.8.0 опубликован · 5 мин 06 с']] },
+    { title: 'altgeo · gateway', lines: [
+      ['t-cmd', 'zentra deploy --service altgeo-gateway'],
+      ['t-dim', 'анализ изменений ............... 6 файлов'],
+      ['t-ok', '✓ приём треков: GPS · Wi-Fi · BLE · LBS'],
+      ['t-ok', '✓ очистка выбросов GPS: 99.2 %'],
+      ['t-ok', '✓ интеграционные тесты: 158 / 158'],
+      ['t-ok', '✓ API v2 обратно совместим'],
+      ['t-ok', '✓ проверка безопасности пройдена'],
+      ['t-dim', 'сборка контейнеров ............ готово'],
+      ['t-dim', 'развёртывание на стенд ........ готово'],
+      ['t-hl', '● altgeo-gateway 0.7.2-beta опубликован · 3 мин 51 с']] }
+  ];
+  var term = document.getElementById('term'), termTitle = term.parentNode.querySelector('.term-bar span'), started = false, runIdx = 0, runNo = 1287, stepT = null;
+  function render(run, n) {
+    term.innerHTML = run.lines.slice(0, n).map(function (l) { return '<div class="' + l[0] + '">' + l[1] + '</div>'; }).join('') + '<span class="cursor"></span>';
+  }
+  function play(run) {
+    termTitle.textContent = 'zentra / pipeline · ' + run.title + ' · #' + (runNo++);
+    if (reduce) { render(run, run.lines.length); return; }
+    var n = 0; render(run, 0);
+    (function step() { n++; render(run, n); if (n < run.lines.length) stepT = setTimeout(step, n === 1 ? 650 : 360); })();
+  }
+  function next() {
+    clearTimeout(stepT);
+    term.classList.add('out');
+    setTimeout(function () {
+      runIdx = (runIdx + 1) % RUNS.length;
+      term.classList.remove('out'); term.classList.add('in');
+      play(RUNS[runIdx]);
+      requestAnimationFrame(function () { requestAnimationFrame(function () { term.classList.remove('in'); }); });
+    }, 450);
+  }
+  function start() { if (started) return; started = true; play(RUNS[0]); setInterval(next, 10000); }
+  render(RUNS[0], 0);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { start(); o.disconnect(); } }, { threshold: .4 }).observe(term);
+  } else start();
+})();
+</script>
+</body>
+</html>
